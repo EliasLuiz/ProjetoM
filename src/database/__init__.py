@@ -1,1 +1,1 @@
-# colocar as configuracoes iniciais do postgresql aqui
+# colocar as configuracoes iniciais do modulo aqui
