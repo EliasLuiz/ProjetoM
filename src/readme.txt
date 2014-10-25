@@ -44,20 +44,25 @@
     3.1 - Hierarquia de Arquivos:
         /
             Pasta raiz da aplicação.
-            main.py
+            main.py:
                 Módulo inicial do programa
-            readme.txt
+            readme.txt:
                 Arquivo contendo os objetivos, tecnologias usadas e padrões
                 adotados na aplicação.
             /database
                 Pacote contendo os módulos de manipulacao do banco de dados.
-                db.py
+                db.py:
                     Arquivo de interface com a biblioteca de banco de dados.
                     Caso seja necessário mudar de banco somente este arquivo
                     será alterado.
                 /database/inep2012
                     Pacote contendo os módulos de manipulacao da base de dados
-                    do INEP de 2012
+                    do INEP - Censo da Educação Superior 2012.
+                    dados_localOferta.py:
+                        Contém as manipulações relativas ao arquivo 
+                        /DADOS/LOCAL_OFERTA.txt da base de dados.
+            /gui
+                Pacote contendo os módulos de criação de interface gráfica.
 
     3.2 - Nomeclaturas de Estruturas:
 
