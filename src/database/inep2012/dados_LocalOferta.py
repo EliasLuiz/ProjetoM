@@ -3,7 +3,7 @@
 # realiza a leitura do arquivo /DADOS/LOCAL_OFERTA.txt
 # cria uma tabela no banco e salva os dados lidos
 
-import db
+from database import db
 
 def txt_to_db(diretorio):
 
@@ -45,21 +45,3 @@ def txt_to_db(diretorio):
         dic['IN_LOCAL_OFERTA_UNID_ACADEMICA'] = linha[240:248] == '       1'
 
     file.close()
-
-
-
-'''
-#funcao antiga otimizada para fins informativos (campos com espaco nao ficam divididos precisamente)
-
-diretorio = raw_input("Pasta de LOCAL_OFERTA.txt: ")
-
-file = open(diretorio + "/LOCAL_OFERTA.txt", "r")
-
-for linha in file.readlines():
-    
-    lista=linha.split(' ')
-        
-    listaElementos = [item.replace('\r\n', '') for item in lista if item != '']
-        
-file.close()
-'''
