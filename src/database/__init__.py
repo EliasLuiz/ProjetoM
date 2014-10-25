@@ -1,0 +1,1 @@
+# colocar as configuracoes iniciais do postgresql aqui
