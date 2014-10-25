@@ -1,6 +1,12 @@
 # realiza a leitura do arquivo /DADOS/CURSO.txt
 # cria uma tabela no banco e salva os dados lidos
 
+
+'''
+%%%%%%%%     TESTAR     %%%%%%%%%
+'''
+
+
 from database import db
 
 def txt_to_db(diretorio):
