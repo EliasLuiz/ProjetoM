@@ -16,36 +16,37 @@ def txt_to_db(diretorio):
     for linha in file.readlines():
 
         dic = {}
+        
         ############### DADOS DA IES ################
         dic['CO_IES'] = int(linha[0:8])
-        dic['NO_IES'] = linha[8:208]
+        dic['NO_IES'] = linha[8:208].strip()
         dic['CO_CATEGORIA_ADMINISTRATIVA'] = int(linha[208:216])
-        dic['DS_CATEGORIA_ADMINISTRATIVA'] = linha[216:316]
+        dic['DS_CATEGORIA_ADMINISTRATIVA'] = linha[216:316].strip()
         dic['CO_ORGANIZACAO_ACADEMICA'] = int(linha[316:324])
-        dic['DS_ORGANIZACAO_ACADEMICA'] = linha[324:424]
+        dic['DS_ORGANIZACAO_ACADEMICA'] = linha[324:424].strip()
         ############### DADOS DO CURSO ################
         dic['CO_MUNICIPIO_CURSO'] = int(linha[424:432])
-        dic['NO_MUNICIPIO_CURSO'] = linha[432:582]
+        dic['NO_MUNICIPIO_CURSO'] = linha[432:582].strip()
         dic['CO_UF_CURSO'] = int(linha[582:590])
         dic['SGL_UF_CURSO'] = linha[590:592]
-        dic['NO_REGIAO_CURSO'] = linha[592:622]
+        dic['NO_REGIAO_CURSO'] = linha[592:622].strip()
         dic['IN_CAPITAL_CURSO'] = linha[622:630] == '       1'
         dic['CO_CURSO'] = int(linha[630:638])
-        dic['NO_CURSO'] = linha[638:838]
-        dic['CO_OCDE'] = linha[838:850]
-        dic['NO_OCDE'] = linha[850:970]
-        dic['CO_OCDE_AREA_GERAL'] = linha[970:982]
-        dic['NO_OCDE_AREA_GERAL'] = linha[982:1102]
-        dic['CO_OCDE_AREA_ESPECIFICA'] = linha[1102:1114]
-        dic['NO_OCDE_AREA_ESPECIFICA'] = linha[1114:1234]
-        dic['CO_OCDE_AREA_DETALHADA'] = linha[1234:1246]
-        dic['NO_OCDE_AREA_DETALHADA'] = linha[1246:1366]
+        dic['NO_CURSO'] = linha[638:838].strip()
+        dic['CO_OCDE'] = linha[838:850].strip()
+        dic['NO_OCDE'] = linha[850:970].strip()
+        dic['CO_OCDE_AREA_GERAL'] = linha[970:982].strip()
+        dic['NO_OCDE_AREA_GERAL'] = linha[982:1102].strip()
+        dic['CO_OCDE_AREA_ESPECIFICA'] = linha[1102:1114].strip()
+        dic['NO_OCDE_AREA_ESPECIFICA'] = linha[1114:1234].strip()
+        dic['CO_OCDE_AREA_DETALHADA'] = linha[1234:1246].strip()
+        dic['NO_OCDE_AREA_DETALHADA'] = linha[1246:1366].strip()
         dic['CO_GRAU_ACADEMICO'] = int(linha[1366:1374])
-        dic['DS_GRAU_ACADEMICO'] = linha[1374:1386]
+        dic['DS_GRAU_ACADEMICO'] = linha[1374:1386].strip()
         dic['CO_MODALIDADE_ENSINO'] = int(linha[1386:1394])
-        dic['DS_MODALIDADE_ENSINO'] = linha[1394:1405]
+        dic['DS_MODALIDADE_ENSINO'] = linha[1394:1405].strip()
         dic['CO_NIVEL_ACADEMICO'] = int(linha[1405:1413])
-        dic['DS_NIVEL_ACADEMICO'] = linha[1413:1446]
+        dic['DS_NIVEL_ACADEMICO'] = linha[1413:1446].strip()
         dic['IN_GRATUITO'] = linha[1446:1454] == '       1'
         dic['TP_ATRIBUTO_INGRESSO'] = int(linha[1454:1462])
         dic['CO_LOCAL_OFERTA'] = int(linha[1462:1470])

@@ -58,6 +58,18 @@
                 /database/inep2012
                     Pacote contendo os módulos de manipulacao da base de dados
                     do INEP - Censo da Educação Superior 2012.
+                    dados_aluno.py:
+                        Contém as manipulações relativas ao arquivo 
+                        /DADOS/ALUNO.txt da base de dados.
+                    dados_curso.py:
+                        Contém as manipulações relativas ao arquivo 
+                        /DADOS/CURSO.txt da base de dados.
+                    dados_docente.py:
+                        Contém as manipulações relativas ao arquivo 
+                        /DADOS/DOCENTE.txt da base de dados.
+                    dados_instituicao.py:
+                        Contém as manipulações relativas ao arquivo 
+                        /DADOS/INSTITUICAO.txt da base de dados.
                     dados_localOferta.py:
                         Contém as manipulações relativas ao arquivo 
                         /DADOS/LOCAL_OFERTA.txt da base de dados.

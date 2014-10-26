@@ -11,7 +11,7 @@ from database import db
 
 def txt_to_db(diretorio):
     
-    file = open(diretorio + "INSTITUICAO.txt", "r")
+    file = open(diretorio + "/DADOS/INSTITUICAO.txt", "r")
     
     for linha in file.readlines():
         
