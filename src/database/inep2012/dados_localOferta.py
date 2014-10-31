@@ -11,6 +11,7 @@ def txt_to_db(diretorio):
 
         dic = {}
 
+        #LEITURA DO ARQUIVO
         dic['CO_LOCAL_OFERTA_IES'] = int(linha[0:8])
         dic['CO_IES'] = int(linha[8:16])
         dic['CO_MUNICIPIO_LOCAL_OFERTA'] = int(linha[16:24])
@@ -28,5 +29,21 @@ def txt_to_db(diretorio):
         dic['IN_LOCAL_OFERTA_REITORIA'] = linha[224:232] == '       1'
         dic['IN_LOCAL_OFERTA_POLO'] = linha[232:240] == '       1'
         dic['IN_LOCAL_OFERTA_UNID_ACADEMICA'] = linha[240:248] == '       1'
+    
+        #INSERÇÃO NO BANCO DE DADOS
+        sqlMunicipio = "INSERT INTO MUNICIPIO_LOCAL_OFERTA(CO_MUNICIPIO_LOCAL_OFERTA,NO_MUNICIPIO_LOCAL_OFERTA, \
+                CO_UF_LOCAL_OFERTA,SGL_UF_LOCAL_OFERTA)"
+        sqlMunicipio = sqlMunicipio + " VALUES(%d, '%s', %d, '%s')" % (dic['CO_MUNICIPIO_LOCAL_OFERTA'], \
+                dic['NO_MUNICIPIO_LOCAL_OFERTA'], dic['CO_UF_LOCAL_OFERTA'], dic['SGL_UF_LOCAL_OFERTA'])
+        print sqlMunicipio
+        sqlLocalOferta="INSERT INTO LOCAL_OFERTA(CO_LOCAL_OFERTA_IES,CO_IES,CO_MUNICIPIO_LOCAL_OFERTA, \
+                IN_SEDE,CO_CURSO_POLO,CO_CURSO,IN_LOCAL_OFERTA_NEAD,IN_LOCAL_OFERTA_UAB,IN_LOCAL_OFERTA_REITORIA, \
+                IN_LOCAL_OFERTA_POLO,IN_LOCAL_OFERTA_UNID_ACADEMICA)"
+        sqlLocalOferta = sqlLocalOferta + " VALUES(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)" % \
+                (dic['CO_LOCAL_OFERTA_IES'], dic['CO_IES'], dic['CO_MUNICIPIO_LOCAL_OFERTA'], dic['IN_SEDE'],  \
+                dic['CO_CURSO_POLO'], dic['CO_CURSO'], dic['IN_LOCAL_OFERTA_NEAD'], dic['IN_LOCAL_OFERTA_UAB'], \
+                dic['IN_LOCAL_OFERTA_REITORIA'], dic['IN_LOCAL_OFERTA_POLO'], dic['IN_LOCAL_OFERTA_UNID_ACADEMICA'])
+        print sqlLocalOferta
 
     file.close()
+    
