@@ -79,3 +79,7 @@
     3.2 - Nomeclaturas de Estruturas:
 
     3.3 - Nomeclaturas de Banco de Dados:
+
+    3.4 - Valores de Retorno:
+        0 - O programa finalizou corretamente
+        1 - Não foi possível conectar ao banco de dados
