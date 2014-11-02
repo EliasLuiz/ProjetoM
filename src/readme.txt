@@ -79,7 +79,30 @@
     3.2 - Nomeclaturas de Estruturas:
 
     3.3 - Nomeclaturas de Banco de Dados:
+        Cada base de dados deverá possuir seu próprio schema.
+        As tabelas seram criadas de acordo com a conveniencia para execução de selects,
+        mantendo nomes no mesmo padrão utilizado na base de dados.
+        As colunas manteram o mesmo nome informado no dicionário da base de dados.
+        INEP2012
+            MUNICIPIO
+                CO_MUNICIPIO INT PRIMARY KEY,
+                NO_MUNICIPIO VARCHAR(150),
+                CO_UF INT,
+                SGL_UF CHAR(2)
+            LOCAL_OFERTA
+                CO_LOCAL_OFERTA_IES INT,
+                CO_IES INT,
+                CO_MUNICIPIO_LOCAL_OFERTA INT,
+                IN_SEDE BOOLEAN,
+                CO_CURSO_POLO INT,
+                CO_CURSO INT,
+                IN_LOCAL_OFERTA_NEAD BOOLEAN,
+                IN_LOCAL_OFERTA_UAB BOOLEAN,
+                IN_LOCAL_OFERTA_REITORIA BOOLEAN,
+                IN_LOCAL_OFERTA_POLO BOOLEAN,
+                IN_LOCAL_OFERTA_UNID_ACADEMICA BOOLEAN
+            
 
-    3.4 - Valores de Retorno:
+    3.4 - Valores de Saída do Programa:
         0 - O programa finalizou corretamente
         1 - Não foi possível conectar ao banco de dados
