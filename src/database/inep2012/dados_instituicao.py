@@ -62,7 +62,7 @@ def txt_to_db(diretorio):
         #INSERCAO NO BANCO DE DADOS
         '''
         sqlMunicipio = "INSERT INTO MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,CO_UF,SGL_UF)"
-        sqlMunicipio2 = " VALUES(%d,%s,%d,%s)" % (dic['CO_MUNICIPIO_IES'], dic['NO_MUNICIPIO_IES'], \
+        sqlMunicipio2 = " VALUES(%s,%s,%s,%s)" % (dic['CO_MUNICIPIO_IES'], dic['NO_MUNICIPIO_IES'], \
                 dic['CO_UF_IES'], dic['SGL_UF_IES'])
         sqlMunicipio = sqlMunicipio + sqlMunicipio2
         #db.query(sqlMunicipio)
@@ -78,8 +78,8 @@ def txt_to_db(diretorio):
                 VL_RECEITA_PROPRIA, VL_TRANSFERENCIA, VL_OUTRA_RECEITA, VL_DES_PESSOAL_REM_DOCENTE, \
                 VL_DES_PESSOAL_REM_TECNICO, VL_DES_PESSOAL_ENCARGO, VL_DES_CUSTEIO, VL_DES_INVESTIMENTO, \
                 VL_DES_PESQUISA, VL_DES_OUTRAS) "
-        sqlIES += "VALUES (%d, %s, %d, %d, %s, %d, %s, %d, %s, %s, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, \
-                %d, %d, %d, %d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f)" % (dic['CO_IES'], \
+        sqlIES += "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, \
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" % (dic['CO_IES'], \
                 dic['NO_IES'], dic['CO_MANTENEDORA'], dic['CO_CATEGORIA_ADMINISTRATIVA'], \
                 dic['DS_CATEGORIA_ADMINISTRATIVA'], dic['CO_ORGANIZACAO_ACADEMICA'], \
                 dic['DS_ORGANIZACAO_ACADEMICA'], dic['CO_MUNICIPIO_IES'], dic['NO_REGIAO_IES'], \
