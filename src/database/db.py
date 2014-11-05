@@ -25,12 +25,13 @@ def query(sql):
 def sqlGenerator(tableName, dicionary):
     #gerador de sql baseado no dicionario
     # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
-    sql = 'INSERT INTO %s(' % tableName
-    sql2 = ') VALUES ('
+    sql = 'INSERT INTO %s( ' % tableName
+    sql2 = ') VALUES ( '
     for i in dic.keys:
         sql += i + ","
         sql2 = "%s," % dic[i]
     sql = sql[:-1]
     sql2 = sql2[:-1]
     #return sql + ')' + sql2 + ')'
-    print sql + ')' + sql2 + ')'
+    return sql + ')' + sql2 + ')'
+    
