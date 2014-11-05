@@ -51,7 +51,11 @@ IN_LOCAL_OFERTA_UNID_ACADEMICA BOOLEAN);""")
         dic['IN_LOCAL_OFERTA_REITORIA'] = linha[224:232] == '       1'
         dic['IN_LOCAL_OFERTA_POLO'] = linha[232:240] == '       1'
         dic['IN_LOCAL_OFERTA_UNID_ACADEMICA'] = linha[240:248] == '       1'
-    
+
+        # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
+        print db.sqlGenerator('DOCENTE', dic)
+        
+        '''
         #INSERCAO NO BANCO DE DADOS
         try:
             db.query("""INSERT INTO INEP2012.MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,
@@ -69,6 +73,7 @@ dic['IN_LOCAL_OFERTA_NEAD'], dic['IN_LOCAL_OFERTA_UAB'], dic['IN_LOCAL_OFERTA_RE
 dic['IN_LOCAL_OFERTA_POLO'], dic['IN_LOCAL_OFERTA_UNID_ACADEMICA']))
         except:
             None
+        '''    
 
     file.close()
     

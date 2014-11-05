@@ -59,6 +59,9 @@ def txt_to_db(diretorio):
         dic['VL_DES_PESQUISA'] = float(linha[894:908])
         dic['VL_DES_OUTRAS'] = float(linha[908:922])
         
+        # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
+        print db.sqlGenerator('IES', dic)
+        
         #INSERCAO NO BANCO DE DADOS
         '''
         sqlMunicipio = "INSERT INTO MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,CO_UF,SGL_UF)"
