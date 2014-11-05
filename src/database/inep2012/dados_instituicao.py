@@ -13,7 +13,7 @@ def txt_to_db(diretorio):
     
     #limpa/cria as tabelas a serem usadas
     db.query("DROP TABLE IF EXISTS INEP2012.IES")
-    db.query("""CREATE TABLE INEP2012.MUNICIPIO(
+    db.query("""CREATE TABLE INEP2012.IES(
 CO_IES INT PRIMARY KEY, 
 NO_IES VARCHAR(200), 
 CO_MANTENEDORA INT, 
