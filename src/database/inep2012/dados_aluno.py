@@ -92,13 +92,13 @@ def txt_to_db(diretorio):
         IN_BOLSA_PESQUISA BOOLEAN, 
         TP_PROCEDE_EDUC_PUBLICA INT, 
         NU_SEMESTRE_CONCLUSAO INT, 
-        IN_ALUNO_PARFOR INT,
+        IN_ALUNO_PARFOR BOOLEAN,
         IN_MATRICULA BOOLEAN, 
         IN_CONCLUINTE BOOLEAN, 
         IN_INGRESSO_TOTAL BOOLEAN, 
         IN_INGRESSO_PROCESSO_SELETIVO BOOLEAN,
         IN_INGRESSO_OUTRAS_FORMAS BOOLEAN, 
-        ANO_INGRESSO INT""")
+        ANO_INGRESSO INT);""")
     
     file = open(diretorio + "/DADOS/ALUNO.txt", "r")
     
@@ -107,44 +107,44 @@ def txt_to_db(diretorio):
         dic = {}
         
         ############### DADOS DA IES ################
-        dic['CO_IES'] = int(linha[0:8])
-        dic['NO_IES'] = linha[8:208].strip()
-        dic['CO_CATEGORIA_ADMINISTRATIVA'] = int(linha[208:216])
-        dic['DS_CATEGORIA_ADMINISTRATIVA'] = linha[216:316].strip()
-        dic['CO_ORGANIZACAO_ACADEMICA'] = int(linha[316:324])
-        dic['DS_ORGANIZACAO_ACADEMICA'] = linha[324:424].strip()
+        dic['CO_IES'] = linha[0:8]
+        #dic['NO_IES'] = linha[8:208].strip()
+        #dic['CO_CATEGORIA_ADMINISTRATIVA'] = linha[208:216]
+        #dic['DS_CATEGORIA_ADMINISTRATIVA'] = linha[216:316].strip()
+        #dic['CO_ORGANIZACAO_ACADEMICA'] = linha[316:324]
+        #dic['DS_ORGANIZACAO_ACADEMICA'] = linha[324:424].strip()
         ############### DADOS DO CURSO ################
-        dic['CO_CURSO'] = int(linha[424:432])
-        dic['NO_CURSO'] = linha[432:632].strip()
-        dic['CO_CURSO_POLO'] = int(linha[632:640])
-        dic['CO_TURNO_ALUNO'] = int(linha[640:648])
-        dic['DS_TURNO_ALUNO'] = linha[648:673].strip()
-        dic['CO_GRAU_ACADEMICO'] = int(linha[673:681])
-        dic['DS_GRAU_ACADEMICO'] = linha[681:693].strip()
-        dic['CO_MODALIDADE_ENSINO'] = int(linha[693:701])
-        dic['DS_MODALIDADE_ENSINO'] = linha[701:712].strip()
-        dic['CO_NIVEL_ACADEMICO'] = int(linha[712:720])
-        dic['DS_NIVEL_ACADEMICO'] = linha[720:753].strip()
+        dic['CO_CURSO'] = linha[424:432]
+        #dic['NO_CURSO'] = linha[432:632].strip()
+        #dic['CO_CURSO_POLO'] = linha[632:640]
+        #dic['CO_TURNO_ALUNO'] = linha[640:648]
+        #dic['DS_TURNO_ALUNO'] = linha[648:673].strip()
+        #dic['CO_GRAU_ACADEMICO'] = linha[673:681]
+        #dic['DS_GRAU_ACADEMICO'] = linha[681:693].strip()
+        #dic['CO_MODALIDADE_ENSINO'] = linha[693:701]
+        #dic['DS_MODALIDADE_ENSINO'] = linha[701:712].strip()
+        #dic['CO_NIVEL_ACADEMICO'] = linha[712:720]
+        #dic['DS_NIVEL_ACADEMICO'] = linha[720:753].strip()
         ############### DADOS DO ALUNO ################
-        dic['CO_ALUNO_CURSO'] = int(linha[753:761])
-        dic['CO_ALUNO'] = int(linha[761:774])
-        dic['CO_COR_RACA_ALUNO'] = int(linha[774:782])
+        dic['CO_ALUNO_CURSO'] = linha[753:761]
+        dic['CO_ALUNO'] = linha[761:774]
+        dic['CO_COR_RACA_ALUNO'] = linha[774:782]
         dic['DS_COR_RACA_ALUNO'] = linha[782:806].strip()  
-        dic['IN_SEXO_ALUNO'] = int(linha[806:814])
+        dic['IN_SEXO_ALUNO'] = linha[806:814]
         dic['DS_SEXO_ALUNO'] = linha[814:823].strip()
-        dic['NU_ANO_ALUNO_NASC'] = int(linha[823:827])
-        dic['NU_MES_ALUNO_NASC'] = int(linha[827:829])
-        dic['NU_DIA_ALUNO_NASC'] = int(linha[829:831])
-        dic['NU_IDADE_ALUNO'] = int(linha[831:839])
-        dic['CO_NACIONALIDADE_ALUNO'] = int(linha[839:847])
+        dic['NU_ANO_ALUNO_NASC'] = linha[823:827]
+        dic['NU_MES_ALUNO_NASC'] = linha[827:829]
+        dic['NU_DIA_ALUNO_NASC'] = linha[829:831]
+        dic['NU_IDADE_ALUNO'] = linha[831:839]
+        dic['CO_NACIONALIDADE_ALUNO'] = linha[839:847]
         dic['DS_NACIONALIDADE_ALUNO'] = linha[847:895].strip()
-        dic['CO_PAIS_ORIGEM_ALUNO'] = int(linha[895:903])
+        dic['CO_PAIS_ORIGEM_ALUNO'] = linha[895:903]
         dic['DS_PAIS_ORIGEM_ALUNO'] = linha[903:983].strip()
-        dic['CO_UF_NASCIMENTO'] = int(linha[983:991])
+        dic['CO_UF_NASCIMENTO'] = linha[983:991]
         dic['DS_UF_NASCIMENTO'] = linha[991:1021].strip()
-        dic['CO_MUNICIPIO_NASCIMENTO'] = int(linha[1021:1029])
+        dic['CO_MUNICIPIO_NASCIMENTO'] = linha[1021:1029]
         dic['DS_MUNICIPIO_NASCIMENTO'] = linha[1029:1179].strip()
-        dic['CO_ALUNO_SITUACAO'] = int(linha[1179:1187])
+        dic['CO_ALUNO_SITUACAO'] = linha[1179:1187]
         dic['DS_ALUNO_SITUACAO'] = linha[1187:1228].strip()
         dic['IN_ALUNO_DEF_TGD_SUPER'] = linha[1228:1236] == '       1'
         dic['IN_DEF_AUDITIVA'] = linha[1236:1244] == '       1'
@@ -200,8 +200,8 @@ def txt_to_db(diretorio):
         dic['IN_BOLSA_EXTENSAO'] = linha[1666:1674] == '       1'
         dic['IN_BOLSA_MONITORIA'] = linha[1674:1682] == '       1'
         dic['IN_BOLSA_PESQUISA'] = linha[1682:1690] == '       1'
-        dic['TP_PROCEDE_EDUC_PUBLICA'] = int(linha[1690:1698])
-        dic['NU_SEMESTRE_CONCLUSAO'] = int(linha[1698:1706])
+        dic['TP_PROCEDE_EDUC_PUBLICA'] = linha[1690:1698]
+        dic['NU_SEMESTRE_CONCLUSAO'] = linha[1698:1706]
         dic['IN_ALUNO_PARFOR'] = linha[1706:1714] == '       1'
         ############### VARI�?VEIS DERIVADAS ################
         dic['IN_MATRICULA'] = linha[1714:1722] == '       1'
@@ -209,7 +209,7 @@ def txt_to_db(diretorio):
         dic['IN_INGRESSO_TOTAL'] = linha[1730:1738] == '       1'
         dic['IN_INGRESSO_PROCESSO_SELETIVO'] = linha[1738:1746] == '       1'
         dic['IN_INGRESSO_OUTRAS_FORMAS'] = linha[1746:1754] == '       1'
-        dic['ANO_INGRESSO'] = int(linha[1754:1758])
+        dic['ANO_INGRESSO'] = linha[1754:1758]
 
         #gerador de sql baseado no dicionario
         # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%

@@ -22,16 +22,20 @@ def query(sql):
     except:
         return None
     
-def sqlGenerator(tableName, dicionary):
+def sqlGenerator(tableName, dictionary):
     #gerador de sql baseado no dicionario
     # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
     sql = 'INSERT INTO %s( ' % tableName
     sql2 = ') VALUES ( '
-    for i in dic.keys:
+    for i in dictionary.keys():
         sql += i + ","
-        sql2 = "%s," % dic[i]
+        try: #insere numero
+            if type(dictionary[i]) != boolean: #bool da erro pq casta pra numero
+                sql2 += "%s," % float(dictionary[i])
+        except: #insere letra
+            sql2 += "'%s'," % dictionary[i]
     sql = sql[:-1]
     sql2 = sql2[:-1]
     #return sql + ')' + sql2 + ')'
-    return sql + ')' + sql2 + ')'
+    return sql + sql2 + ')'
     
