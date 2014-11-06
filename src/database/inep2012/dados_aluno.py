@@ -213,7 +213,7 @@ def txt_to_db(diretorio):
 
         #gerador de sql baseado no dicionario
         # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
-        db.query(db.sqlGenerator('ALUNO', dic))
+        db.query(db.sqlGenerator('INEP2012.ALUNO', dic))
         
         '''
         db.query("INSERT INTO ALUNO(CO_IES, CO_CURSO, CO_ALUNO_CURSO, CO_ALUNO, CO_COR_RACA_ALUNO,\
