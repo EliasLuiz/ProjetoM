@@ -203,7 +203,7 @@ def txt_to_db(diretorio):
         dic['TP_PROCEDE_EDUC_PUBLICA'] = linha[1690:1698]
         dic['NU_SEMESTRE_CONCLUSAO'] = linha[1698:1706]
         dic['IN_ALUNO_PARFOR'] = linha[1706:1714] == '       1'
-        ############### VARI�?VEIS DERIVADAS ################
+        ############### VARIAVEIS DERIVADAS ################
         dic['IN_MATRICULA'] = linha[1714:1722] == '       1'
         dic['IN_CONCLUINTE'] = linha[1722:1730] == '       1'
         dic['IN_INGRESSO_TOTAL'] = linha[1730:1738] == '       1'
@@ -213,7 +213,7 @@ def txt_to_db(diretorio):
 
         #gerador de sql baseado no dicionario
         # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
-        print db.sqlGenerator('ALUNO', dic)
+        db.query(db.sqlGenerator('ALUNO', dic))
         
         '''
         db.query("INSERT INTO ALUNO(CO_IES, CO_CURSO, CO_ALUNO_CURSO, CO_ALUNO, CO_COR_RACA_ALUNO,\

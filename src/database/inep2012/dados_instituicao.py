@@ -102,7 +102,7 @@ def txt_to_db(diretorio):
         dic['VL_DES_OUTRAS'] = float(linha[908:922])
         
         # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
-        print db.sqlGenerator('IES', dic)
+        db.query(db.sqlGenerator('IES', dic))
         
         #INSERCAO NO BANCO DE DADOS
         '''
