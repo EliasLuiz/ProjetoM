@@ -8,12 +8,11 @@ import sys
 try:
     conn = pg.connect("dbname='projetom' user='projetom' host='localhost' password='maurilio'")
     conn.autocommit = True
+	cur = conn.cursor()
 except:
     print "Nao foi possivel conectar ao banco de dados"
     raw_input('Pressione enter para encerrar o programa')
     sys.exit(1)
-     
-cur = conn.cursor()
 
 def query(sql):
     cur.execute(sql)
@@ -22,9 +21,8 @@ def query(sql):
     except:
         return None
     
-def sqlGenerator(tableName, dictionary):
+def sqlInsertGenerator(tableName, dictionary):
     #gerador de sql baseado no dicionario
-    # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
     sql = 'INSERT INTO %s( ' % tableName
     sql2 = ') VALUES ( '
     for i in dictionary.keys():
@@ -36,6 +34,19 @@ def sqlGenerator(tableName, dictionary):
             sql2 += "'%s'," % dictionary[i]
     sql = sql[:-1]
     sql2 = sql2[:-1]
-    #return sql + ')' + sql2 + ')'
     return sql + sql2 + ')'
     
+
+	
+def pgAutoCommit(state = None):
+	if state != None: #se passar parametro tenta alterar a politica
+		if type(state) != boolean:
+			raise TypeError
+		try:
+			conn.autocommit = state
+		except:
+			print "Erro ao alterar a politica de commits do banco de dados"
+			raw_input('Pressione enter para encerrar o programa')
+			sys.exit(1)
+	else: # se nao passar parametro retorna o valor atual
+		return state

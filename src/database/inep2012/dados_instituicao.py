@@ -10,9 +10,19 @@
 from database import db
 
 def txt_to_db(diretorio):
+
+    db.pgAutoCommit(False)
     
     #limpa/cria as tabelas a serem usadas
+    db.query("DROP TABLE IF EXISTS INEP2012.MUNICIPIO")
     db.query("DROP TABLE IF EXISTS INEP2012.IES")
+    db.query("""CREATE TABLE INEP2012.MUNICIPIO(
+        CO_MUNICIPIO INT PRIMARY KEY,
+        NO_MUNICIPIO VARCHAR(150),
+        CO_UF INT,
+        SGL_UF CHAR(2),
+        NO_REGIAO VARCHAR(30), 
+        IN_CAPITAL BOOLEAN);""")
     db.query("""CREATE TABLE INEP2012.IES(
         CO_IES INT PRIMARY KEY, 
         NO_IES VARCHAR(200), 
@@ -22,8 +32,6 @@ def txt_to_db(diretorio):
         CO_ORGANIZACAO_ACADEMICA INT, 
         DS_ORGANIZACAO_ACADEMICA VARCHAR(100), 
         CO_MUNICIPIO_IES INT, 
-        NO_REGIAO_IES VARCHAR(30), 
-        IN_CAPITAL_IES BOOLEAN, 
         QT_TEC_TOTAL INT, 
         QT_TEC_FUND_INCOMP_MASC INT, 
         QT_TEC_FUND_INCOMP_FEM INT, 
@@ -41,7 +49,7 @@ def txt_to_db(diretorio):
         QT_TEC_DOUTORADO_FEM INT, 
         IN_ACESSO_PORTAL_CAPES BOOLEAN, 
         IN_ACESSO_OUTRAS_BASES BOOLEAN, 
-        IN_REFERENTE BOOLEAN, 
+        IN_REFERENTE INT, 
         VL_RECEITA_PROPRIA DECIMAL(2), 
         VL_TRANSFERENCIA DECIMAL(2), 
         VL_OUTRA_RECEITA DECIMAL(2), 
@@ -58,7 +66,9 @@ def txt_to_db(diretorio):
     for linha in file.readlines():
         
         dic = {}
+		dic2 = {}
         
+		#LEITURA DO ARQUIVO
         dic['CO_IES'] = linha[0:8]
         dic['NO_IES'] = linha[8:208].strip()
         dic['CO_MANTENEDORA'] = linha[208:216]
@@ -66,12 +76,12 @@ def txt_to_db(diretorio):
         dic['DS_CATEGORIA_ADMINISTRATIVA'] = linha[224:324].strip()
         dic['CO_ORGANIZACAO_ACADEMICA'] = linha[324:332]
         dic['DS_ORGANIZACAO_ACADEMICA'] = linha[332:432].strip()
-        dic['CO_MUNICIPIO_IES'] = linha[432:440]
-        #dic['NO_MUNICIPIO_IES'] = linha[440:590].strip()
-        #dic['CO_UF_IES'] = linha[590:598]
-        #dic['SGL_UF_IES'] = linha[598:600].strip()
-        dic['NO_REGIAO_IES'] = linha[600:630].strip()
-        dic['IN_CAPITAL_IES'] = linha[630:638] == '       1'
+        dic2['CO_MUNICIPIO'] = dic['CO_MUNICIPIO_IES'] = linha[432:440]
+        dic2['NO_MUNICIPIO'] = linha[440:590].strip()
+        dic2['CO_UF'] = linha[590:598]
+        dic2['SGL_UF'] = linha[598:600].strip()
+        dic2['NO_REGIAO'] = linha[600:630].strip()
+        dic2['IN_CAPITAL'] = linha[630:638] == '       1'
         dic['QT_TEC_TOTAL'] = linha[638:646]
         dic['QT_TEC_FUND_INCOMP_MASC'] = linha[646:654]
         dic['QT_TEC_FUND_INCOMP_FEM'] = linha[654:662]
@@ -101,10 +111,21 @@ def txt_to_db(diretorio):
         dic['VL_DES_PESQUISA'] = float(linha[894:908])
         dic['VL_DES_OUTRAS'] = float(linha[908:922])
         
-        # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
-        db.query(db.sqlGenerator('INEP2012.IES', dic))
-        
         #INSERCAO NO BANCO DE DADOS
+		try:
+		    db.query(db.sqlInsertGenerator('INEP2012.IES', dic))
+		except:
+			None
+		
+        try:
+            '''
+            db.query("""INSERT INTO INEP2012.MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,
+                CO_UF,SGL_UF) VALUES(%s, '%s', %s, '%s')""" % (dic['CO_MUNICIPIO_LOCAL_OFERTA'], \
+                dic['NO_MUNICIPIO_LOCAL_OFERTA'], dic['CO_UF_LOCAL_OFERTA'], dic['SGL_UF_LOCAL_OFERTA']))'''
+            db.query(db.sqlInsertGenerator('INEP2012.MUNICIPIO', dic2))
+        except:
+            None
+        
         '''
         sqlMunicipio = "INSERT INTO MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,CO_UF,SGL_UF)"
         sqlMunicipio2 = " VALUES(%s,%s,%s,%s)" % (dic['CO_MUNICIPIO_IES'], dic['NO_MUNICIPIO_IES'], \

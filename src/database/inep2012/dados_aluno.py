@@ -11,6 +11,8 @@ from database import db
 
 
 def txt_to_db(diretorio):
+
+    db.pgAutoCommit(False)
     
     #limpa/cria as tabelas a serem usadas
     db.query("DROP TABLE IF EXISTS INEP2012.ALUNO")
@@ -106,6 +108,7 @@ def txt_to_db(diretorio):
         
         dic = {}
         
+		#LEITURA DO ARQUIVO
         ############### DADOS DA IES ################
         dic['CO_IES'] = linha[0:8]
         #dic['NO_IES'] = linha[8:208].strip()
@@ -211,9 +214,8 @@ def txt_to_db(diretorio):
         dic['IN_INGRESSO_OUTRAS_FORMAS'] = linha[1746:1754] == '       1'
         dic['ANO_INGRESSO'] = linha[1754:1758]
 
-        #gerador de sql baseado no dicionario
-        # %%%%%%%%%%%%% TESTAR %%%%%%%%%%%%%%
-        db.query(db.sqlGenerator('INEP2012.ALUNO', dic))
+        #INSERCAO NO BANCO DE DADOS
+        db.query(db.sqlInsertGenerator('INEP2012.ALUNO', dic))
         
         '''
         db.query("INSERT INTO ALUNO(CO_IES, CO_CURSO, CO_ALUNO_CURSO, CO_ALUNO, CO_COR_RACA_ALUNO,\
