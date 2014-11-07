@@ -10,10 +10,9 @@
 from database import db
 
 def txt_to_db(diretorio):
-
-    db.pgAutoCommit(False)
     
     #limpa/cria as tabelas a serem usadas
+    db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.MUNICIPIO")
     db.query("DROP TABLE IF EXISTS INEP2012.IES")
     db.query("""CREATE TABLE INEP2012.MUNICIPIO(
@@ -50,25 +49,25 @@ def txt_to_db(diretorio):
         IN_ACESSO_PORTAL_CAPES BOOLEAN, 
         IN_ACESSO_OUTRAS_BASES BOOLEAN, 
         IN_REFERENTE INT, 
-        VL_RECEITA_PROPRIA DECIMAL(2), 
-        VL_TRANSFERENCIA DECIMAL(2), 
-        VL_OUTRA_RECEITA DECIMAL(2), 
-        VL_DES_PESSOAL_REM_DOCENTE DECIMAL(2), 
-        VL_DES_PESSOAL_REM_TECNICO DECIMAL(2), 
-        VL_DES_PESSOAL_ENCARGO DECIMAL(2), 
-        VL_DES_CUSTEIO DECIMAL(2), 
-        VL_DES_INVESTIMENTO DECIMAL(2), 
-        VL_DES_PESQUISA DECIMAL(2), 
-        VL_DES_OUTRAS DECIMAL(2));""")
+        VL_RECEITA_PROPRIA DECIMAL(12,2), 
+        VL_TRANSFERENCIA DECIMAL(12,2), 
+        VL_OUTRA_RECEITA DECIMAL(12,2), 
+        VL_DES_PESSOAL_REM_DOCENTE DECIMAL(12,2), 
+        VL_DES_PESSOAL_REM_TECNICO DECIMAL(12,2), 
+        VL_DES_PESSOAL_ENCARGO DECIMAL(12,2), 
+        VL_DES_CUSTEIO DECIMAL(12,2), 
+        VL_DES_INVESTIMENTO DECIMAL(12,2), 
+        VL_DES_PESQUISA DECIMAL(12,2), 
+        VL_DES_OUTRAS DECIMAL(12,2));""")
     
     file = open(diretorio + "/DADOS/INSTITUICAO.txt", "r")
     
     for linha in file.readlines():
         
         dic = {}
-		dic2 = {}
+	dic2 = {}
         
-		#LEITURA DO ARQUIVO
+	#LEITURA DO ARQUIVO
         dic['CO_IES'] = linha[0:8]
         dic['NO_IES'] = linha[8:208].strip()
         dic['CO_MANTENEDORA'] = linha[208:216]
@@ -112,10 +111,10 @@ def txt_to_db(diretorio):
         dic['VL_DES_OUTRAS'] = float(linha[908:922])
         
         #INSERCAO NO BANCO DE DADOS
-		try:
-		    db.query(db.sqlInsertGenerator('INEP2012.IES', dic))
-		except:
-			None
+	try:
+            db.query(db.sqlInsertGenerator('INEP2012.IES', dic))
+	except:
+            None
 		
         try:
             '''

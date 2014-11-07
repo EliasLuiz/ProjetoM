@@ -11,10 +11,9 @@ from database import db
 
 
 def txt_to_db(diretorio):
-
-    db.pgAutoCommit(False)
     
     #limpa/cria as tabelas a serem usadas
+    db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.ALUNO")
     db.query("""CREATE TABLE INEP2012.ALUNO(
         CO_IES INT PRIMARY KEY,

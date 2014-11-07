@@ -10,9 +10,8 @@
 from database import db
 
 def txt_to_db(diretorio):
-
-    db.pgAutoCommit(False)
     
+    db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.CURSO")
     db.query("""CREATE TABLE INEP2012.CURSO(
         CO_IES INT,

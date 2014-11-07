@@ -4,10 +4,9 @@
 from database import db
 
 def txt_to_db(diretorio):
-
-    db.pgAutoCommit(False)
     
     #limpa/cria as tabelas a serem usadas
+    db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.LOCAL_OFERTA")
     db.query("""CREATE TABLE INEP2012.LOCAL_OFERTA(
         CO_LOCAL_OFERTA_IES INT,
@@ -22,11 +21,7 @@ def txt_to_db(diretorio):
         IN_LOCAL_OFERTA_POLO BOOLEAN,
         IN_LOCAL_OFERTA_UNID_ACADEMICA BOOLEAN);""")
 
-
     file = open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r")
-	
-    #sql = ""
-    #sql2 = ""
 	
     for linha in file.readlines():
 
@@ -51,25 +46,6 @@ def txt_to_db(diretorio):
         dic['IN_LOCAL_OFERTA_REITORIA'] = linha[224:232] == '       1'
         dic['IN_LOCAL_OFERTA_POLO'] = linha[232:240] == '       1'
         dic['IN_LOCAL_OFERTA_UNID_ACADEMICA'] = linha[240:248] == '       1'
-
-		''' 
-		#TESTE DE OTIMIZACAO
-		if len(sql)==0:
-			sql = "INSERT INTO INEP2012.LOCAL_OFERTA("
-			for i in dic.keys():
-				sql += i + ","
-			sql = sql[:-1] + ')'
-			sql2 = 'VALUES'
-			
-		for i in dic:
-		sql2 += '('
-			sql += i + ","
-		sql2 += '),'
-			
-		if len(sql2)>3500000:
-			db.query(sql+sql2[:-1])
-			sql2 = 'VALUES'
-		'''
         
         #INSERCAO NO BANCO DE DADOS
         try:
@@ -88,11 +64,7 @@ def txt_to_db(diretorio):
                 dic['IN_LOCAL_OFERTA_UNID_ACADEMICA']))
         except:
             None
-			
-	#TESTE DE OTIMIZACAO
-	if sql != 'VALUES'
-		db.query(sql+sql2[:-1])
-        '''    
+        '''
 
     file.close()
     
