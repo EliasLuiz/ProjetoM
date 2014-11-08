@@ -8,15 +8,18 @@
 
 
 from database import db
+import codecs
 
 
 def txt_to_db(diretorio):
+    
+    print "entrou em aluno"
     
     #limpa/cria as tabelas a serem usadas
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.ALUNO")
     db.query("""CREATE TABLE INEP2012.ALUNO(
-        CO_IES INT PRIMARY KEY,
+        CO_IES INT,
         CO_CURSO INT,
         CO_ALUNO_CURSO INT,
         CO_ALUNO BIGINT,
@@ -101,7 +104,7 @@ def txt_to_db(diretorio):
         IN_INGRESSO_OUTRAS_FORMAS BOOLEAN, 
         ANO_INGRESSO INT);""")
     
-    file = open(diretorio + "/DADOS/ALUNO.txt", "r")
+    file = codecs.open(diretorio + "/DADOS/ALUNO.txt", "r", 'latin-1')
     
     for linha in file.readlines():
         
@@ -212,6 +215,8 @@ def txt_to_db(diretorio):
         dic['IN_INGRESSO_PROCESSO_SELETIVO'] = linha[1738:1746] == '       1'
         dic['IN_INGRESSO_OUTRAS_FORMAS'] = linha[1746:1754] == '       1'
         dic['ANO_INGRESSO'] = linha[1754:1758]
+        
+        db.latin2utf(dic)
 
         #INSERCAO NO BANCO DE DADOS
         db.query(db.sqlInsertGenerator('INEP2012.ALUNO', dic))

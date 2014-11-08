@@ -8,13 +8,16 @@
 
 
 from database import db
+import codecs
 
 def txt_to_db(diretorio):
+    
+    print "entrou em docente"
 
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.DOCENTE")
     db.query("""CREATE TABLE INEP2012.DOCENTE(
-        CO_IES INT PRIMARY KEY,
+        CO_IES INT,
         CO_DOCENTE_IES INT,
         CO_DOCENTE BIGINT,
         CO_SITUACAO_DOCENTE INT,
@@ -57,7 +60,7 @@ def txt_to_db(diretorio):
         IN_VISITANTE BOOLEAN,
         IN_VISITANTE_IFES_VINCULO INT);""")
     
-    file = open(diretorio + "/DADOS/DOCENTE.txt", "r")
+    file = codecs.open(diretorio + "/DADOS/DOCENTE.txt", "r", 'latin-1')
     
     for linha in file.readlines():
         
@@ -96,10 +99,10 @@ def txt_to_db(diretorio):
         dic['CO_PAIS_DOCENTE'] = linha[644:652]
         dic['CO_NACIONALIDADE_DOCENTE'] = linha[652:660]
         if(linha[660:676].isalnum()):
-            dic['CO_UF_NASCIMENTO'] = linha[660:668]
+            #dic['CO_UF_NASCIMENTO'] = linha[660:668]
             dic['CO_MUNICIPIO_NASCIMENTO'] = linha[668:676]
         else:
-            dic['CO_UF_NASCIMENTO'] = ""
+            #dic['CO_UF_NASCIMENTO'] = ""
             dic['CO_MUNICIPIO_NASCIMENTO'] = ""
         dic['IN_DOCENTE_DEFICIENCIA'] = linha[676:684] == '       1'
         if(linha[684:692].isalnum()):
@@ -186,6 +189,8 @@ def txt_to_db(diretorio):
             dic['IN_VISITANTE_IFES_VINCULO'] = linha[844:852] #um codigo 1 ou 2 que eh optativo
         else:
             dic['IN_VISITANTE_IFES_VINCULO'] = ""
+        
+        db.latin2utf(dic)
 
         #INSERCAO NO BANCO DE DADOS
         db.query(db.sqlInsertGenerator('INEP2012.DOCENTE', dic))

@@ -9,10 +9,8 @@ import sys
 
 #diretorio = raw_input("Pasta da base de dados: ")
 
-#localOferta.txt_to_db(diretorio)
-
 #localOferta.txt_to_db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
-ies.txt_to_db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
+#ies.txt_to_db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
 curso.txt_to_db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
 docente.txt_to_db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
 aluno.txt_to_db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')

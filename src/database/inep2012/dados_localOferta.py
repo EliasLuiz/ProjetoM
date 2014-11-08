@@ -2,8 +2,11 @@
 # cria uma tabela no banco e salva os dados lidos
 
 from database import db
+import codecs
 
 def txt_to_db(diretorio):
+    
+    print "entrou em local"
     
     #limpa/cria as tabelas a serem usadas
     db.commit()
@@ -21,7 +24,7 @@ def txt_to_db(diretorio):
         IN_LOCAL_OFERTA_POLO BOOLEAN,
         IN_LOCAL_OFERTA_UNID_ACADEMICA BOOLEAN);""")
 
-    file = open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r")
+    file = codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1')
 	
     for linha in file.readlines():
 
@@ -47,11 +50,11 @@ def txt_to_db(diretorio):
         dic['IN_LOCAL_OFERTA_POLO'] = linha[232:240] == '       1'
         dic['IN_LOCAL_OFERTA_UNID_ACADEMICA'] = linha[240:248] == '       1'
         
+        db.latin2utf(dic)
+        
         #INSERCAO NO BANCO DE DADOS
-        try:
-            db.query(db.sqlInsertGenerator('INEP2012.LOCAL_OFERTA', dic))
-        except:
-            None
+        db.query(db.sqlInsertGenerator('INEP2012.LOCAL_OFERTA', dic))
+        
         '''
         try:
             db.query("""INSERT INTO INEP2012.LOCAL_OFERTA(CO_LOCAL_OFERTA_IES,CO_IES,

@@ -8,17 +8,18 @@
 
 
 from database import db
+import codecs
 
 def txt_to_db(diretorio):
+    
+    print "entrou em curso"
     
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.CURSO")
     db.query("""CREATE TABLE INEP2012.CURSO(
         CO_IES INT,
         CO_MUNICIPIO_CURSO INT,
-        NO_REGIAO_CURSO VARCHAR(30),
-        IN_CAPITAL_CURSO BOOLEAN,
-        CO_CURSO INT PRIMARY KEY,
+        CO_CURSO INT,
         NO_CURSO VARCHAR(200),
         CO_OCDE VARCHAR(12),
         NO_OCDE VARCHAR(120),
@@ -35,7 +36,7 @@ def txt_to_db(diretorio):
         CO_NIVEL_ACADEMICO INT,
         DS_NIVEL_ACADEMICO VARCHAR(33),
         IN_GRATUITO BOOLEAN,
-        TP_ATRIBUTO_INGRESSO BOOLEAN,
+        TP_ATRIBUTO_INGRESSO INT,
         CO_LOCAL_OFERTA INT,
         NU_CARGA_HORARIA INT,
         DT_INICIO_FUNCIONAMENTO VARCHAR(38),
@@ -79,11 +80,13 @@ def txt_to_db(diretorio):
         QT_INGRESSO_PROCESSO_SELETIVO INT,
         QT_INGRESSO_OUTRA_FORMA INT);""")
 
-    file = open(diretorio + "/DADOS/CURSO.txt", "r")
+    file = codecs.open(diretorio + "/DADOS/CURSO.txt", "r", 'latin-1')
 
     for linha in file.readlines():
 
         dic = {}
+        
+        #linha = linha.encode('utf-8')
         
 		#LEITURA DO ARQUIVO
         ############### DADOS DA IES ################
@@ -98,8 +101,8 @@ def txt_to_db(diretorio):
         #dic['NO_MUNICIPIO_CURSO'] = linha[432:582].strip()
         #dic['CO_UF_CURSO'] = linha[582:590]
         #dic['SGL_UF_CURSO'] = linha[590:592]
-        dic['NO_REGIAO_CURSO'] = linha[592:622].strip()
-        dic['IN_CAPITAL_CURSO'] = linha[622:630] == '       1'
+        #dic['NO_REGIAO_CURSO'] = linha[592:622].strip()
+        #dic['IN_CAPITAL_CURSO'] = linha[622:630] == '       1'
         dic['CO_CURSO'] = linha[630:638]
         dic['NO_CURSO'] = linha[638:838].strip()
         dic['CO_OCDE'] = linha[838:850].strip()
@@ -191,6 +194,8 @@ def txt_to_db(diretorio):
         dic['QT_INGRESSO_CURSO'] = linha[1834:1842]
         dic['QT_INGRESSO_PROCESSO_SELETIVO'] = linha[1842:1850]
         dic['QT_INGRESSO_OUTRA_FORMA'] = linha[1850:1858]
+        
+        db.latin2utf(dic)
 
         #INSERCAO NO BANCO DE DADOS
         db.query(db.sqlInsertGenerator('INEP2012.CURSO', dic))

@@ -1,15 +1,12 @@
 # realiza a leitura do arquivo /DADOS/INSTITUICAO.txt
 # cria uma tabela no banco e salva os dados lidos
 
-
-'''
-%%%%%%%%     TESTAR     %%%%%%%%%
-'''
-
-
 from database import db
+import codecs
 
 def txt_to_db(diretorio):
+    
+    print "entrou em ies"
     
     #limpa/cria as tabelas a serem usadas
     db.commit()
@@ -23,7 +20,7 @@ def txt_to_db(diretorio):
         NO_REGIAO VARCHAR(30), 
         IN_CAPITAL BOOLEAN);""")
     db.query("""CREATE TABLE INEP2012.IES(
-        CO_IES INT PRIMARY KEY, 
+        CO_IES INT, 
         NO_IES VARCHAR(200), 
         CO_MANTENEDORA INT, 
         CO_CATEGORIA_ADMINISTRATIVA INT, 
@@ -60,7 +57,7 @@ def txt_to_db(diretorio):
         VL_DES_PESQUISA DECIMAL(12,2), 
         VL_DES_OUTRAS DECIMAL(12,2));""")
     
-    file = open(diretorio + "/DADOS/INSTITUICAO.txt", "r")
+    file = codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1')
     
     for linha in file.readlines():
         
@@ -110,20 +107,19 @@ def txt_to_db(diretorio):
         dic['VL_DES_PESQUISA'] = float(linha[894:908])
         dic['VL_DES_OUTRAS'] = float(linha[908:922])
         
+        db.latin2utf(dic)
+        
         #INSERCAO NO BANCO DE DADOS
-	try:
-            db.query(db.sqlInsertGenerator('INEP2012.IES', dic))
-	except:
-            None
+	db.query(db.sqlInsertGenerator('INEP2012.IES', dic))
 		
-        try:
-            '''
-            db.query("""INSERT INTO INEP2012.MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,
-                CO_UF,SGL_UF) VALUES(%s, '%s', %s, '%s')""" % (dic['CO_MUNICIPIO_LOCAL_OFERTA'], \
-                dic['NO_MUNICIPIO_LOCAL_OFERTA'], dic['CO_UF_LOCAL_OFERTA'], dic['SGL_UF_LOCAL_OFERTA']))'''
-            db.query(db.sqlInsertGenerator('INEP2012.MUNICIPIO', dic2))
-        except:
-            None
+#        try:
+#            '''
+#            db.query("""INSERT INTO INEP2012.MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,
+#                CO_UF,SGL_UF) VALUES(%s, '%s', %s, '%s')""" % (dic['CO_MUNICIPIO_LOCAL_OFERTA'], \
+#                dic['NO_MUNICIPIO_LOCAL_OFERTA'], dic['CO_UF_LOCAL_OFERTA'], dic['SGL_UF_LOCAL_OFERTA']))'''
+#            db.query(db.sqlInsertGenerator('INEP2012.MUNICIPIO', dic2))
+#        except:
+#            None
         
         '''
         sqlMunicipio = "INSERT INTO MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,CO_UF,SGL_UF)"
