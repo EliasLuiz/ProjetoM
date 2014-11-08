@@ -6,7 +6,7 @@ import codecs
 
 def txt2db(diretorio):
     
-    print "entrou em local"
+#    print "entrou em local"
     
     #limpa/cria as tabelas a serem usadas
     db.commit()

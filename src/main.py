@@ -9,10 +9,10 @@ import sys
 
 #diretorio = raw_input("Pasta da base de dados: ")
 
-#ies.txt2db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
+ies.txt2db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
 localOferta.txt2db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
 curso.txt2db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
-#docente.txt2db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
+docente.txt2db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
 #aluno.txt2db('/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012')
 
 sys.exit(0)

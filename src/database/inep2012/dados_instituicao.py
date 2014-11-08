@@ -6,7 +6,7 @@ import codecs
 
 def txt2db(diretorio):
     
-    print "entrou em ies"
+#    print "entrou em ies"
     
     #limpa/cria as tabelas a serem usadas
     db.commit()
@@ -47,16 +47,16 @@ def txt2db(diretorio):
         IN_ACESSO_PORTAL_CAPES BOOLEAN, 
         IN_ACESSO_OUTRAS_BASES BOOLEAN, 
         IN_REFERENTE INT, 
-        VL_RECEITA_PROPRIA DECIMAL(12,2), 
-        VL_TRANSFERENCIA DECIMAL(12,2), 
-        VL_OUTRA_RECEITA DECIMAL(12,2), 
-        VL_DES_PESSOAL_REM_DOCENTE DECIMAL(12,2), 
-        VL_DES_PESSOAL_REM_TECNICO DECIMAL(12,2), 
-        VL_DES_PESSOAL_ENCARGO DECIMAL(12,2), 
-        VL_DES_CUSTEIO DECIMAL(12,2), 
-        VL_DES_INVESTIMENTO DECIMAL(12,2), 
-        VL_DES_PESQUISA DECIMAL(12,2), 
-        VL_DES_OUTRAS DECIMAL(12,2));""")
+        VL_RECEITA_PROPRIA DECIMAL(14,2), 
+        VL_TRANSFERENCIA DECIMAL(14,2), 
+        VL_OUTRA_RECEITA DECIMAL(14,2), 
+        VL_DES_PESSOAL_REM_DOCENTE DECIMAL(14,2), 
+        VL_DES_PESSOAL_REM_TECNICO DECIMAL(14,2), 
+        VL_DES_PESSOAL_ENCARGO DECIMAL(14,2), 
+        VL_DES_CUSTEIO DECIMAL(14,2), 
+        VL_DES_INVESTIMENTO DECIMAL(14,2), 
+        VL_DES_PESQUISA DECIMAL(14,2), 
+        VL_DES_OUTRAS DECIMAL(14,2));""")
         
         
     firstExec = True

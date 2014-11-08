@@ -1,18 +1,12 @@
 # realiza a leitura do arquivo /DADOS/DOCENTE.txt
 # cria uma tabela no banco e salva os dados lidos
 
-
-'''
-%%%%%%%%     TESTAR     %%%%%%%%%
-'''
-
-
 from database import db
 import codecs
 
 def txt2db(diretorio):
     
-    print "entrou em docente"
+#    print "entrou em docente"
 
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.DOCENTE")

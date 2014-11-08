@@ -1,19 +1,13 @@
 # realiza a leitura do arquivo /DADOS/ALUNO.txt
 # cria uma tabela no banco e salva os dados lidos
 
-
-'''
-%%%%%%%%     TESTAR     %%%%%%%%%
-'''
-
-
 from database import db
 import codecs
 
 
 def txt2db(diretorio):
     
-    print "entrou em aluno"
+#    print "entrou em aluno"
     
     #limpa/cria as tabelas a serem usadas
     db.commit()

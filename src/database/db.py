@@ -75,6 +75,7 @@ def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert 
         cont+=1
     sql = sql[:-1]
     sql2 = sql2[:-1]
+#    print sql + sql2 + ')'
     query(sql + sql2 + ')')
 
 

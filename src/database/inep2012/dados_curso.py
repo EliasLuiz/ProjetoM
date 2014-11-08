@@ -1,18 +1,12 @@
 # realiza a leitura do arquivo /DADOS/CURSO.txt
 # cria uma tabela no banco e salva os dados lidos
 
-
-'''
-%%%%%%%%     TESTAR     %%%%%%%%%
-'''
-
-
 from database import db
 import codecs
 
 def txt2db(diretorio):
     
-    print "entrou em curso"
+#    print "entrou em curso"
     
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.CURSO")
@@ -58,12 +52,12 @@ def txt2db(diretorio):
         IN_MATUTINO_CURSO BOOLEAN,
         IN_NOTURNO_CURSO BOOLEAN,
         IN_VESPERTINO_CURSO BOOLEAN,
-        NU_PERC_CARGA_HOR_DISTANCIA INT,
-        NU_INTEGRALIZACAO_MATUTINO INT,
-        NU_INTEGRALIZACAO_VESPERTINO INT,
-        NU_INTEGRALIZACAO_NOTURNO INT,
-        NU_INTEGRALIZACAO_INTEGRAL INT,
-        NU_INTEGRALIZACAO_EAD INT,
+        NU_PERC_CARGA_HOR_DISTANCIA DECIMAL(8,4),
+        NU_INTEGRALIZACAO_MATUTINO DECIMAL(8,1),
+        NU_INTEGRALIZACAO_VESPERTINO DECIMAL(8,1),
+        NU_INTEGRALIZACAO_NOTURNO DECIMAL(8,1),
+        NU_INTEGRALIZACAO_INTEGRAL DECIMAL(8,1),
+        NU_INTEGRALIZACAO_EAD DECIMAL(8,1),
         QT_INSCRITOS_ANO_EAD INT,
         QT_VAGAS_ANUAL_EAD INT,
         QT_VAGAS_INTEGRAL_PRES INT,
