@@ -14,6 +14,7 @@ except:
     raw_input('Pressione enter para encerrar o programa')
     sys.exit(1)
 
+
 def query(sql): #executa uma query sql
     try:
         cur.execute(sql)
@@ -23,6 +24,7 @@ def query(sql): #executa uma query sql
         return cur.fetchall()
     except:
         return None
+    
     
 def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no dicionario
     #gerador de sql baseado no dicionario
@@ -46,12 +48,47 @@ def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no di
     sql = sql[:-1]
     sql2 = sql2[:-1]
     return sql + sql2 + ')'
-            
+
+
+def sqlInsertGenerator2(tableName, dictionary): #gera sql de insert baseado no dicionario
+    #gerador de sql baseado no dicionario
+    sql = 'INSERT INTO %s( ' % tableName
+    sql2 = ') VALUES ( '
+    values = []
+    for i in dictionary:
+        sql += i + ","
+        sql2 += "%s," 
+        values.append((str(dictionary[i])).strip())
     sql = sql[:-1]
     sql2 = sql2[:-1]
-    return sql + sql2 + ')'
+    return cur.mogrify(sql + sql2 + ')', tuple(values))
 
+
+def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert baseado no dicionario
+    #gerador de sql baseado no dicionario
+    sql = 'PREPARE %s_INS AS INSERT INTO %s( ' % (statementName, tableName)
+    sql2 = ') VALUES ( '
+    cont=1
+    for i in dictionary:
+        sql += i + ","
+        sql2 += "$%d," % cont
+        cont+=1
+    sql = sql[:-1]
+    sql2 = sql2[:-1]
+    query(sql + sql2 + ')')
+
+
+def usePreparedInsert(statementName, dictionary): #prepara sql de insert baseado no dicionario
+    #gerador de sql baseado no dicionario
+    sql = 'EXECUTE %s_INS ( ' % statementName
+    values=[]
+    for i in dictionary:
+        sql += "%s,"
+        values.append(dictionary[i] if dictionary[i]!="" else None)
+    sql = sql[:-1]
+    query(cur.mogrify(sql + ')', tuple(values)))
 	
+        
 def pgAutoCommit(state = None): #altera o valor de auto-commit do postgres
     if state != None: #se passar parametro tenta alterar a politica
 	if type(state) != bool:
@@ -65,8 +102,10 @@ def pgAutoCommit(state = None): #altera o valor de auto-commit do postgres
     else: # se nao passar parametro retorna o valor atual
 	return state
     
+    
 def commit(): #executa commit na transacao
     conn.commit()
+    
     
 def latin2utf(dictionary):
     for i in dictionary:

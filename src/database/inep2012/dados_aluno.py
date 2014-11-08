@@ -11,7 +11,7 @@ from database import db
 import codecs
 
 
-def txt_to_db(diretorio):
+def txt2db(diretorio):
     
     print "entrou em aluno"
     
@@ -25,7 +25,7 @@ def txt_to_db(diretorio):
         CO_ALUNO BIGINT,
         CO_COR_RACA_ALUNO INT,
         DS_COR_RACA_ALUNO VARCHAR(24),
-        IN_SEXO_ALUNO BOOLEAN,
+        IN_SEXO_ALUNO SMALLINT,
         DS_SEXO_ALUNO VARCHAR(9), 
         NU_ANO_ALUNO_NASC INT, 
         NU_MES_ALUNO_NASC INT,
@@ -35,8 +35,6 @@ def txt_to_db(diretorio):
         DS_NACIONALIDADE_ALUNO VARCHAR(48),
         CO_PAIS_ORIGEM_ALUNO INT, 
         DS_PAIS_ORIGEM_ALUNO VARCHAR(80), 
-        CO_UF_NASCIMENTO INT, 
-        DS_UF_NASCIMENTO VARCHAR(30),
         CO_MUNICIPIO_NASCIMENTO INT, 
         CO_ALUNO_SITUACAO INT, 
         DS_ALUNO_SITUACAO VARCHAR(41), 
@@ -53,7 +51,7 @@ def txt_to_db(diretorio):
         IN_TGD_SINDROME_ASPERGER BOOLEAN, 
         IN_TGD_SINDROME_RETT BOOLEAN, 
         IN_TGD_TRANSTOR_DESINTEGRATIVO BOOLEAN,
-        DT_INGRESSO_CURSO BOOLEAN, 
+        DT_INGRESSO_CURSO VARCHAR(38), 
         IN_RESERVA_VAGAS BOOLEAN, 
         IN_FINANC_ESTUDANTIL BOOLEAN, 
         IN_ING_VESTIBULAR BOOLEAN,
@@ -103,14 +101,14 @@ def txt_to_db(diretorio):
         IN_INGRESSO_PROCESSO_SELETIVO BOOLEAN,
         IN_INGRESSO_OUTRAS_FORMAS BOOLEAN, 
         ANO_INGRESSO INT);""")
-    
-    #file = codecs.open(diretorio + "/DADOS/ALUNO.txt", "r", 'latin-1')
+        
+    firstExec = True
     
     for linha in codecs.open(diretorio + "/DADOS/ALUNO.txt", "r", 'latin-1'):
         
         dic = {}
         
-		#LEITURA DO ARQUIVO
+	#LEITURA DO ARQUIVO
         ############### DADOS DA IES ################
         dic['CO_IES'] = linha[0:8]
         #dic['NO_IES'] = linha[8:208].strip()
@@ -145,10 +143,10 @@ def txt_to_db(diretorio):
         dic['DS_NACIONALIDADE_ALUNO'] = linha[847:895].strip()
         dic['CO_PAIS_ORIGEM_ALUNO'] = linha[895:903]
         dic['DS_PAIS_ORIGEM_ALUNO'] = linha[903:983].strip()
-        dic['CO_UF_NASCIMENTO'] = linha[983:991]
-        dic['DS_UF_NASCIMENTO'] = linha[991:1021].strip()
+        #dic['CO_UF_NASCIMENTO'] = linha[983:991]
+        #dic['DS_UF_NASCIMENTO'] = linha[991:1021].strip()
         dic['CO_MUNICIPIO_NASCIMENTO'] = linha[1021:1029]
-        dic['DS_MUNICIPIO_NASCIMENTO'] = linha[1029:1179].strip()
+        #dic['DS_MUNICIPIO_NASCIMENTO'] = linha[1029:1179].strip()
         dic['CO_ALUNO_SITUACAO'] = linha[1179:1187]
         dic['DS_ALUNO_SITUACAO'] = linha[1187:1228].strip()
         dic['IN_ALUNO_DEF_TGD_SUPER'] = linha[1228:1236] == '       1'
@@ -216,12 +214,32 @@ def txt_to_db(diretorio):
         dic['IN_INGRESSO_OUTRAS_FORMAS'] = linha[1746:1754] == '       1'
         dic['ANO_INGRESSO'] = linha[1754:1758]
         
+        
+        
+        #CONVERSAO DE LATIN-1 PARA UTF-8
         db.latin2utf(dic)
 
+
+
         #INSERCAO NO BANCO DE DADOS
-        db.query(db.sqlInsertGenerator('INEP2012.ALUNO', dic))
+        if firstExec:
+            db.prepareInsert('ALUNO', 'INEP2012.ALUNO', dic)
+            db.commit()
+            firstExec = False
+            
+	db.usePreparedInsert('ALUNO', dic)
         
-        '''
+        
+    db.commit()
+    
+    
+    
+    
+    
+    
+    
+        
+'''
         db.query("INSERT INTO ALUNO(CO_IES, CO_CURSO, CO_ALUNO_CURSO, CO_ALUNO, CO_COR_RACA_ALUNO,\
         DS_COR_RACA_ALUNO, IN_SEXO_ALUNO, DS_SEXO_ALUNO, NU_ANO_ALUNO_NASC, NU_MES_ALUNO_NASC,\
         NU_DIA_ALUNO_NASC, NU_IDADE_ALUNO, CO_NACIONALIDADE_ALUNO, DS_NACIONALIDADE_ALUNO,\
@@ -273,9 +291,4 @@ def txt_to_db(diretorio):
         dic['TP_PROCEDE_EDUC_PUBLICA'], dic['NU_SEMESTRE_CONCLUSAO'], dic['IN_ALUNO_PARFOR'],\
         dic['IN_MATRICULA'], dic['IN_CONCLUINTE'], dic['IN_INGRESSO_TOTAL'],\
         dic['IN_INGRESSO_PROCESSO_SELETIVO'], dic['IN_INGRESSO_OUTRAS_FORMAS'], dic['ANO_INGRESSO']))
-        '''
-        
-    #file.close()
-    
-        
-        
+'''

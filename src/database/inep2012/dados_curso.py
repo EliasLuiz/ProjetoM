@@ -10,7 +10,7 @@
 from database import db
 import codecs
 
-def txt_to_db(diretorio):
+def txt2db(diretorio):
     
     print "entrou em curso"
     
@@ -79,16 +79,17 @@ def txt_to_db(diretorio):
         QT_INGRESSO_CURSO INT,
         QT_INGRESSO_PROCESSO_SELETIVO INT,
         QT_INGRESSO_OUTRA_FORMA INT);""")
+        
+        
+    firstExec = True
 
-    #file = codecs.open(diretorio + "/DADOS/CURSO.txt", "r", 'latin-1')
 
     for linha in codecs.open(diretorio + "/DADOS/CURSO.txt", "r", 'latin-1'):
 
         dic = {}
         
-        #linha = linha.encode('utf-8')
         
-		#LEITURA DO ARQUIVO
+	#LEITURA DO ARQUIVO
         ############### DADOS DA IES ################
         dic['CO_IES'] = linha[0:8]
         #dic['NO_IES'] = linha[8:208].strip()
@@ -151,43 +152,43 @@ def txt_to_db(diretorio):
         try:
             dic['QT_INSCRITOS_ANO_EAD'] = linha[1738:1746]
         except:
-            dic['QT_INSCRITOS_ANO_EAD'] = ""
+            dic['QT_INSCRITOS_ANO_EAD'] = None
         try:
             dic['QT_VAGAS_ANUAL_EAD'] = linha[1746:1754]
         except:
-            dic['QT_VAGAS_ANUAL_EAD'] = ""
+            dic['QT_VAGAS_ANUAL_EAD'] = None
         try:
             dic['QT_VAGAS_INTEGRAL_PRES'] = linha[1754:1762]
         except:
-            dic['QT_VAGAS_INTEGRAL_PRES'] = ""
+            dic['QT_VAGAS_INTEGRAL_PRES'] = None
         try: 
             dic['QT_VAGAS_MATUTINO_PRES'] = linha[1762:1770]
         except:
-            dic['QT_VAGAS_MATUTINO_PRES'] = ""
+            dic['QT_VAGAS_MATUTINO_PRES'] = None
         try: 
             dic['QT_VAGAS_VESPERTINO_PRES'] = linha[1770:1778]
         except:
-            dic['QT_VAGAS_VESPERTINO_PRES'] = ""
+            dic['QT_VAGAS_VESPERTINO_PRES'] = None
         try: 
             dic['QT_VAGAS_NOTURNO_PRES'] = linha[1778:1786]
         except:
-            dic['QT_VAGAS_NOTURNO_PRES'] = ""
+            dic['QT_VAGAS_NOTURNO_PRES'] = None
         try: 
             dic['QT_INSCRITOS_MATUTINO_PRES'] = linha[1786:1794]
         except:
-            dic['QT_INSCRITOS_MATUTINO_PRES'] = ""
+            dic['QT_INSCRITOS_MATUTINO_PRES'] = None
         try: 
             dic['QT_INSCRITOS_VESPERTINO_PRES'] = linha[1794:1802]
         except:
-            dic['QT_INSCRITOS_VESPERTINO_PRES'] = ""
+            dic['QT_INSCRITOS_VESPERTINO_PRES'] = None
         try: 
             dic['QT_INSCRITOS_NOTURNO_PRES'] = linha[1802:1810]
         except:
-            dic['QT_INSCRITOS_NOTURNO_PRES'] = ""
+            dic['QT_INSCRITOS_NOTURNO_PRES'] = None
         try: 
             dic['QT_INSCRITOS_INTEGRAL_PRES'] = linha[1810:1818]
         except:
-            dic['QT_INSCRITOS_INTEGRAL_PRES'] = ""
+            dic['QT_INSCRITOS_INTEGRAL_PRES'] = None
         ############### VARIAVEIS DERIVADAS ################
         dic['QT_MATRICULA_CURSO'] = linha[1818:1826]
         dic['QT_CONCLUINTE_CURSO'] = linha[1826:1834]
@@ -195,16 +196,28 @@ def txt_to_db(diretorio):
         dic['QT_INGRESSO_PROCESSO_SELETIVO'] = linha[1842:1850]
         dic['QT_INGRESSO_OUTRA_FORMA'] = linha[1850:1858]
         
+        
+        
+        #CONVERSAO DE LATIN-1 PARA UTF-8
         db.latin2utf(dic)
 
+
+
         #INSERCAO NO BANCO DE DADOS
-        db.query(db.sqlInsertGenerator('INEP2012.CURSO', dic))
+        if firstExec:
+            db.prepareInsert('CURSO', 'INEP2012.CURSO', dic)
+            db.commit()
+            firstExec = False
+            
+	db.usePreparedInsert('CURSO', dic)
+
+
+    db.commit()
         
-        '''
+        
+'''
         sqlCurso="INSERT INTO CURSO(CO_IES,CO_MUNICIPIO_CURSO,NO_REGIAO_CURSO,IN_CAPITAL_CURSO,CO_CURSO,NO_CURSO,CO_OCDE,NO_OCDE,CO_OCDE_AREA_GERAL,NO_OCDE_AREA_GERAL,CO_OCDE_AREA_ESPECIFICA,NO_OCDE_AREA_ESPECIFICA,CO_OCDE_AREA_DETALHADA,NO_OCDE_AREA_DETALHADA,CO_GRAU_ACADEMICO,DS_GRAU_ACADEMICO,CO_MODALIDADE_ENSINO,DS_MODALIDADE_ENSINO,CO_NIVEL_ACADEMICO,DS_NIVEL_ACADEMICO,IN_GRATUITO,TP_ATRIBUTO_INGRESSO,CO_LOCAL_OFERTA,NU_CARGA_HORARIA,DT_INICIO_FUNCIONAMENTO,DT_AUTORIZACAO_CURSO,IN_AJUDA_DEFICIENTE,IN_MATERIAL_DIGITAL,IN_MATERIAL_AMPLIADO,IN_MATERIAL_TATIL,IN_MATERIAL_IMPRESSO,IN_MATERIAL_AUDIO,IN_MATERIAL_BRAILLE,IN_DISCIPLINA_LIBRAS,IN_GUIA_INTERPRETE,IN_MATERIAL_LIBRAS,IN_RECURSOS_COMUNICACAO,IN_RECURSOS_INFORMATICA,IN_TRADUTOR_LIBRAS,IN_INTEGRAL_CURSO,IN_MATUTINO_CURSO,IN_NOTURNO_CURSO,IN_VESPERTINO_CURSO,NU_PERC_CARGA_HOR_DISTANCIA,NU_INTEGRALIZACAO_MATUTINO,NU_INTEGRALIZACAO_VESPERTINO,NU_INTEGRALIZACAO_NOTURNO,NU_INTEGRALIZACAO_INTEGRAL,NU_INTEGRALIZACAO_EAD,QT_INSCRITOS_ANO_EAD,QT_INSCRITOS_ANO_EAD,QT_VAGAS_ANUAL_EAD,QT_VAGAS_ANUAL_EAD,QT_VAGAS_INTEGRAL_PRES,QT_VAGAS_INTEGRAL_PRES,QT_VAGAS_MATUTINO_PRES,QT_VAGAS_MATUTINO_PRES,QT_VAGAS_VESPERTINO_PRES,QT_VAGAS_VESPERTINO_PRES,QT_VAGAS_NOTURNO_PRES,QT_VAGAS_NOTURNO_PRES,QT_INSCRITOS_MATUTINO_PRES,QT_INSCRITOS_MATUTINO_PRES,QT_INSCRITOS_VESPERTINO_PRES,QT_INSCRITOS_VESPERTINO_PRES,QT_INSCRITOS_NOTURNO_PRES,QT_INSCRITOS_NOTURNO_PRES,QT_INSCRITOS_INTEGRAL_PRES,QT_INSCRITOS_INTEGRAL_PRES,QT_MATRICULA_CURSO,QT_CONCLUINTE_CURSO,QT_INGRESSO_CURSO,QT_INGRESSO_PROCESSO_SELETIVO,QT_INGRESSO_OUTRA_FORMA) "
         sqlCurso2="VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"%(dic['CO_IES'],dic['CO_MUNICIPIO_CURSO'],dic['NO_REGIAO_CURSO'],dic['IN_CAPITAL_CURSO'],dic['CO_CURSO'],dic['NO_CURSO'],dic['CO_OCDE'],dic['NO_OCDE'],dic['CO_OCDE_AREA_GERAL'],dic['NO_OCDE_AREA_GERAL'],dic['CO_OCDE_AREA_ESPECIFICA'],dic['NO_OCDE_AREA_ESPECIFICA'],dic['CO_OCDE_AREA_DETALHADA'],dic['NO_OCDE_AREA_DETALHADA'],dic['CO_GRAU_ACADEMICO'],dic['DS_GRAU_ACADEMICO'],dic['CO_MODALIDADE_ENSINO'],dic['DS_MODALIDADE_ENSINO'],dic['CO_NIVEL_ACADEMICO'],dic['DS_NIVEL_ACADEMICO'],dic['IN_GRATUITO'],dic['TP_ATRIBUTO_INGRESSO'],dic['CO_LOCAL_OFERTA'],dic['NU_CARGA_HORARIA'],dic['DT_INICIO_FUNCIONAMENTO'],dic['DT_AUTORIZACAO_CURSO'],dic['IN_AJUDA_DEFICIENTE'],dic['IN_MATERIAL_DIGITAL'],dic['IN_MATERIAL_AMPLIADO'],dic['IN_MATERIAL_TATIL'],dic['IN_MATERIAL_IMPRESSO'],dic['IN_MATERIAL_AUDIO'],dic['IN_MATERIAL_BRAILLE'],dic['IN_DISCIPLINA_LIBRAS'],dic['IN_GUIA_INTERPRETE'],dic['IN_MATERIAL_LIBRAS'],dic['IN_RECURSOS_COMUNICACAO'],dic['IN_RECURSOS_INFORMATICA'],dic['IN_TRADUTOR_LIBRAS'],dic['IN_INTEGRAL_CURSO'],dic['IN_MATUTINO_CURSO'],dic['IN_NOTURNO_CURSO'],dic['IN_VESPERTINO_CURSO'],dic['NU_PERC_CARGA_HOR_DISTANCIA'],dic['NU_INTEGRALIZACAO_MATUTINO'],dic['NU_INTEGRALIZACAO_VESPERTINO'],dic['NU_INTEGRALIZACAO_NOTURNO'],dic['NU_INTEGRALIZACAO_INTEGRAL'],dic['NU_INTEGRALIZACAO_EAD'],dic['QT_INSCRITOS_ANO_EAD'],dic['QT_INSCRITOS_ANO_EAD'],dic['QT_VAGAS_ANUAL_EAD'],dic['QT_VAGAS_ANUAL_EAD'],dic['QT_VAGAS_INTEGRAL_PRES'],dic['QT_VAGAS_INTEGRAL_PRES'],dic['QT_VAGAS_MATUTINO_PRES'],dic['QT_VAGAS_MATUTINO_PRES'],dic['QT_VAGAS_VESPERTINO_PRES'],dic['QT_VAGAS_VESPERTINO_PRES'],dic['QT_VAGAS_NOTURNO_PRES'],dic['QT_VAGAS_NOTURNO_PRES'],dic['QT_INSCRITOS_MATUTINO_PRES'],dic['QT_INSCRITOS_MATUTINO_PRES'],dic['QT_INSCRITOS_VESPERTINO_PRES'],dic['QT_INSCRITOS_VESPERTINO_PRES'],dic['QT_INSCRITOS_NOTURNO_PRES'],dic['QT_INSCRITOS_NOTURNO_PRES'],dic['QT_INSCRITOS_INTEGRAL_PRES'],dic['QT_INSCRITOS_INTEGRAL_PRES'],dic['QT_MATRICULA_CURSO'],dic['QT_CONCLUINTE_CURSO'],dic['QT_INGRESSO_CURSO'],dic['QT_INGRESSO_PROCESSO_SELETIVO'],dic['QT_INGRESSO_OUTRA_FORMA'])
         sqlCurso=sqlCurso+sqlCurso2
         db.query(sqlCurso)
-        '''
-
-    #file.close()
+'''

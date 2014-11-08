@@ -4,7 +4,7 @@
 from database import db
 import codecs
 
-def txt_to_db(diretorio):
+def txt2db(diretorio):
     
     print "entrou em local"
     
@@ -23,13 +23,13 @@ def txt_to_db(diretorio):
         IN_LOCAL_OFERTA_REITORIA BOOLEAN,
         IN_LOCAL_OFERTA_POLO BOOLEAN,
         IN_LOCAL_OFERTA_UNID_ACADEMICA BOOLEAN);""")
+        
+    firstExec = True
 
-    #file = codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1')
 	
     for linha in codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1'):
 
         dic = {}
-        dic2 = {}
 
         #LEITURA DO ARQUIVO
         dic['CO_LOCAL_OFERTA_IES'] = linha[0:8]
@@ -42,7 +42,7 @@ def txt_to_db(diretorio):
         try:   #algumas linhas vem com o campo vazio
             dic['CO_CURSO_POLO'] = linha[192:200]
         except:
-            dic['CO_CURSO_POLO'] = ""
+            dic['CO_CURSO_POLO'] = None
         dic['CO_CURSO'] = linha[200:208]
         dic['IN_LOCAL_OFERTA_NEAD'] = linha[208:216] == '       1'
         dic['IN_LOCAL_OFERTA_UAB'] = linha[216:224] == '       1'
@@ -50,12 +50,29 @@ def txt_to_db(diretorio):
         dic['IN_LOCAL_OFERTA_POLO'] = linha[232:240] == '       1'
         dic['IN_LOCAL_OFERTA_UNID_ACADEMICA'] = linha[240:248] == '       1'
         
+        
+        
+        #CONVERSAO DE LATIN-1 PARA UTF-8
         db.latin2utf(dic)
         
-        #INSERCAO NO BANCO DE DADOS
-        db.query(db.sqlInsertGenerator('INEP2012.LOCAL_OFERTA', dic))
         
-        '''
+        
+        #INSERCAO NO BANCO DE DADOS
+        if firstExec:
+            db.prepareInsert('LOCAL_OFERTA', 'INEP2012.LOCAL_OFERTA', dic)
+            db.commit()
+            firstExec = False
+            
+	db.usePreparedInsert('LOCAL_OFERTA', dic)
+
+
+    db.commit()
+    
+
+
+
+        
+'''
         try:
             db.query("""INSERT INTO INEP2012.LOCAL_OFERTA(CO_LOCAL_OFERTA_IES,CO_IES,
                 CO_MUNICIPIO_LOCAL_OFERTA,IN_SEDE,CO_CURSO_POLO,CO_CURSO,IN_LOCAL_OFERTA_NEAD,IN_LOCAL_OFERTA_UAB,
@@ -67,7 +84,4 @@ def txt_to_db(diretorio):
                 dic['IN_LOCAL_OFERTA_UNID_ACADEMICA']))
         except:
             None
-        '''
-
-    #file.close()
-    
+'''

@@ -4,12 +4,13 @@
 from database import db
 import codecs
 
-def txt_to_db(diretorio):
+def txt2db(diretorio):
     
     print "entrou em ies"
     
     #limpa/cria as tabelas a serem usadas
     db.commit()
+    db.pgAutoCommit(False)
     db.query("DROP TABLE IF EXISTS INEP2012.MUNICIPIO")
     db.query("DROP TABLE IF EXISTS INEP2012.IES")
     db.query("""CREATE TABLE INEP2012.MUNICIPIO(
@@ -56,8 +57,10 @@ def txt_to_db(diretorio):
         VL_DES_INVESTIMENTO DECIMAL(12,2), 
         VL_DES_PESQUISA DECIMAL(12,2), 
         VL_DES_OUTRAS DECIMAL(12,2));""")
+        
+        
+    firstExec = True
     
-    #file = codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1')
     
     for linha in codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1'):
         
@@ -107,10 +110,20 @@ def txt_to_db(diretorio):
         dic['VL_DES_PESQUISA'] = float(linha[894:908])
         dic['VL_DES_OUTRAS'] = float(linha[908:922])
         
+        
+        
+        #CONVERSAO DE LATIN-1 PARA UTF-8
         db.latin2utf(dic)
         
+        
+        
         #INSERCAO NO BANCO DE DADOS
-	db.query(db.sqlInsertGenerator('INEP2012.IES', dic))
+        if firstExec:
+            db.prepareInsert('IES', 'INEP2012.IES', dic)
+            db.commit()
+            firstExec = False
+            
+	db.usePreparedInsert('IES', dic)
 		
 #        try:
 #            '''
@@ -121,7 +134,14 @@ def txt_to_db(diretorio):
 #        except:
 #            None
         
-        '''
+    db.commit()
+
+
+
+
+
+
+'''
         sqlMunicipio = "INSERT INTO MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,CO_UF,SGL_UF)"
         sqlMunicipio2 = " VALUES(%s,%s,%s,%s)" % (dic['CO_MUNICIPIO_IES'], dic['NO_MUNICIPIO_IES'], \
                 dic['CO_UF_IES'], dic['SGL_UF_IES'])
@@ -155,6 +175,5 @@ def txt_to_db(diretorio):
                 dic['VL_DES_PESSOAL_ENCARGO'], dic['VL_DES_CUSTEIO'], dic['VL_DES_INVESTIMENTO'], \
                 dic['VL_DES_PESQUISA'], dic['VL_DES_OUTRAS'])
         print sqlIES
-        #db.query(sqlIES)'''
-        
-    #file.close()
+        #db.query(sqlIES)
+'''
