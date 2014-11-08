@@ -24,9 +24,9 @@ def txt_to_db(diretorio):
         IN_LOCAL_OFERTA_POLO BOOLEAN,
         IN_LOCAL_OFERTA_UNID_ACADEMICA BOOLEAN);""")
 
-    file = codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1')
+    #file = codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1')
 	
-    for linha in file.readlines():
+    for linha in codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1'):
 
         dic = {}
         dic2 = {}
@@ -69,5 +69,5 @@ def txt_to_db(diretorio):
             None
         '''
 
-    file.close()
+    #file.close()
     

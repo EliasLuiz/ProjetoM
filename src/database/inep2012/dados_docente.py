@@ -60,9 +60,9 @@ def txt_to_db(diretorio):
         IN_VISITANTE BOOLEAN,
         IN_VISITANTE_IFES_VINCULO INT);""")
     
-    file = codecs.open(diretorio + "/DADOS/DOCENTE.txt", "r", 'latin-1')
+    #file = codecs.open(diretorio + "/DADOS/DOCENTE.txt", "r", 'latin-1')
     
-    for linha in file.readlines():
+    for linha in codecs.open(diretorio + "/DADOS/DOCENTE.txt", "r", 'latin-1'):
         
         dic = {}
         
@@ -202,5 +202,5 @@ def txt_to_db(diretorio):
         db.query(sqlDocente)
         '''
         
-    file.close()
+    #file.close()
 

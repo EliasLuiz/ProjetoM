@@ -104,9 +104,9 @@ def txt_to_db(diretorio):
         IN_INGRESSO_OUTRAS_FORMAS BOOLEAN, 
         ANO_INGRESSO INT);""")
     
-    file = codecs.open(diretorio + "/DADOS/ALUNO.txt", "r", 'latin-1')
+    #file = codecs.open(diretorio + "/DADOS/ALUNO.txt", "r", 'latin-1')
     
-    for linha in file.readlines():
+    for linha in codecs.open(diretorio + "/DADOS/ALUNO.txt", "r", 'latin-1'):
         
         dic = {}
         
@@ -275,7 +275,7 @@ def txt_to_db(diretorio):
         dic['IN_INGRESSO_PROCESSO_SELETIVO'], dic['IN_INGRESSO_OUTRAS_FORMAS'], dic['ANO_INGRESSO']))
         '''
         
-    file.close()
+    #file.close()
     
         
         

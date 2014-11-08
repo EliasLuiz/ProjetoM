@@ -80,9 +80,9 @@ def txt_to_db(diretorio):
         QT_INGRESSO_PROCESSO_SELETIVO INT,
         QT_INGRESSO_OUTRA_FORMA INT);""")
 
-    file = codecs.open(diretorio + "/DADOS/CURSO.txt", "r", 'latin-1')
+    #file = codecs.open(diretorio + "/DADOS/CURSO.txt", "r", 'latin-1')
 
-    for linha in file.readlines():
+    for linha in codecs.open(diretorio + "/DADOS/CURSO.txt", "r", 'latin-1'):
 
         dic = {}
         
@@ -207,4 +207,4 @@ def txt_to_db(diretorio):
         db.query(sqlCurso)
         '''
 
-    file.close()
+    #file.close()

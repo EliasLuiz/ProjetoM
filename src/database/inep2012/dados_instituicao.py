@@ -57,9 +57,9 @@ def txt_to_db(diretorio):
         VL_DES_PESQUISA DECIMAL(12,2), 
         VL_DES_OUTRAS DECIMAL(12,2));""")
     
-    file = codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1')
+    #file = codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1')
     
-    for linha in file.readlines():
+    for linha in codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1'):
         
         dic = {}
 	dic2 = {}
@@ -157,4 +157,4 @@ def txt_to_db(diretorio):
         print sqlIES
         #db.query(sqlIES)'''
         
-    file.close()
+    #file.close()
