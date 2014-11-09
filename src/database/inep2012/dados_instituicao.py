@@ -6,15 +6,13 @@ import codecs
 
 def txt2db(diretorio):
     
-#    print "entrou em ies"
-    
-    #limpa/cria as tabelas a serem usadas
+    #limpa/cria as tabelas a serem usadas	
     db.commit()
     db.pgAutoCommit(False)
     db.query("DROP TABLE IF EXISTS INEP2012.MUNICIPIO")
     db.query("DROP TABLE IF EXISTS INEP2012.IES")
     db.query("""CREATE TABLE INEP2012.MUNICIPIO(
-        CO_MUNICIPIO INT PRIMARY KEY,
+        CO_MUNICIPIO INT,
         NO_MUNICIPIO VARCHAR(150),
         CO_UF INT,
         SGL_UF CHAR(2),
@@ -114,26 +112,31 @@ def txt2db(diretorio):
         
         #CONVERSAO DE LATIN-1 PARA UTF-8
         db.latin2utf(dic)
+        db.latin2utf(dic2)
         
         
         
         #INSERCAO NO BANCO DE DADOS
         if firstExec:
             db.prepareInsert('IES', 'INEP2012.IES', dic)
+            db.prepareInsert('MUNICIPIO', 'INEP2012.MUNICIPIO', dic2)
             db.commit()
             firstExec = False
             
-	db.usePreparedInsert('IES', dic)
-		
-#        try:
-#            '''
-#            db.query("""INSERT INTO INEP2012.MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,
-#                CO_UF,SGL_UF) VALUES(%s, '%s', %s, '%s')""" % (dic['CO_MUNICIPIO_LOCAL_OFERTA'], \
-#                dic['NO_MUNICIPIO_LOCAL_OFERTA'], dic['CO_UF_LOCAL_OFERTA'], dic['SGL_UF_LOCAL_OFERTA']))'''
-#            db.query(db.sqlInsertGenerator('INEP2012.MUNICIPIO', dic2))
-#        except:
-#            None
+        db.usePreparedInsert('IES', dic)
+        try:
+            db.usePreparedInsert('MUNICIPIO', dic2)
+        except:
+            None
         
+    db.commit()
+    
+    #retira as cidades repetidas
+    db.query('''
+    CREATE TABLE INEP2012.tmp as SELECT DISTINCT * FROM INEP2012.MUNICIPIO;
+    DROP TABLE INEP2012.MUNICIPIO;
+    ALTER TABLE INEP2012.tmp RENAME TO MUNICIPIO;''')
+    
     db.commit()
 
 
@@ -141,6 +144,11 @@ def txt2db(diretorio):
 
 
 
+'''
+            db.query("""INSERT INTO INEP2012.MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,
+                CO_UF,SGL_UF) VALUES(%s, '%s', %s, '%s')""" % (dic['CO_MUNICIPIO_LOCAL_OFERTA'], \
+                dic['NO_MUNICIPIO_LOCAL_OFERTA'], dic['CO_UF_LOCAL_OFERTA'], dic['SGL_UF_LOCAL_OFERTA'])
+'''
 '''
         sqlMunicipio = "INSERT INTO MUNICIPIO(CO_MUNICIPIO,NO_MUNICIPIO,CO_UF,SGL_UF)"
         sqlMunicipio2 = " VALUES(%s,%s,%s,%s)" % (dic['CO_MUNICIPIO_IES'], dic['NO_MUNICIPIO_IES'], \

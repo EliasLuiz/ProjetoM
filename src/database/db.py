@@ -24,33 +24,9 @@ def query(sql): #executa uma query sql
         return cur.fetchall()
     except:
         return None
-    
-    
+
+
 def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no dicionario
-    #gerador de sql baseado no dicionario
-    sql = 'INSERT INTO %s( ' % tableName
-    sql2 = ') VALUES ( '
-    for i in dictionary:
-        sql += i + ","
-        dictionary[i] = (str(dictionary[i])).strip()
-        if dictionary[i] == "": #se n tiver nda insere null
-            sql2 += "null,"
-            continue
-        elif dictionary[i] in ('True', 'False'): #se for bool insere
-            sql2 += "%s," % dictionary[i]
-            continue
-        try: #tenta inserir numero
-            if "E" in dictionary[i]:
-                raise
-            sql2 += "%s," % float(dictionary[i])
-        except: #insere letra
-            sql2 += "'%s'," % dictionary[i].replace("\'", "")
-    sql = sql[:-1]
-    sql2 = sql2[:-1]
-    return sql + sql2 + ')'
-
-
-def sqlInsertGenerator2(tableName, dictionary): #gera sql de insert baseado no dicionario
     #gerador de sql baseado no dicionario
     sql = 'INSERT INTO %s( ' % tableName
     sql2 = ') VALUES ( '
@@ -118,3 +94,28 @@ def latin2utf(dictionary):
             dictionary[i] = dictionary[i].encode('utf-8')
         except:
             None
+            
+            
+            
+#def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no dicionario
+#    #gerador de sql baseado no dicionario
+#    sql = 'INSERT INTO %s( ' % tableName
+#    sql2 = ') VALUES ( '
+#    for i in dictionary:
+#        sql += i + ","
+#        dictionary[i] = (str(dictionary[i])).strip()
+#        if dictionary[i] == "": #se n tiver nda insere null
+#            sql2 += "null,"
+#            continue
+#        elif dictionary[i] in ('True', 'False'): #se for bool insere
+#            sql2 += "%s," % dictionary[i]
+#            continue
+#        try: #tenta inserir numero
+#            if "E" in dictionary[i]:
+#                raise
+#            sql2 += "%s," % float(dictionary[i])
+#        except: #insere letra
+#            sql2 += "'%s'," % dictionary[i].replace("\'", "")
+#    sql = sql[:-1]
+#    sql2 = sql2[:-1]
+#    return sql + sql2 + ')'
