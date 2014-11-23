@@ -7,8 +7,6 @@ import codecs
 
 def txt2db(diretorio):
     
-#    print "entrou em aluno"
-    
     #limpa/cria as tabelas a serem usadas
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.ALUNO")
@@ -102,7 +100,7 @@ def txt2db(diretorio):
         
         dic = {}
         
-	#LEITURA DO ARQUIVO
+        #LEITURA DO ARQUIVO
         ############### DADOS DA IES ################
         dic['CO_IES'] = linha[0:8]
         #dic['NO_IES'] = linha[8:208].strip()
@@ -221,7 +219,7 @@ def txt2db(diretorio):
             db.commit()
             firstExec = False
             
-	db.usePreparedInsert('ALUNO', dic)
+        db.usePreparedInsert('ALUNO', dic)
         
         
     db.commit()

@@ -1,18 +1,20 @@
 #!/usr/bin/python
+# -.- coding:latin -.-
 
-from database.inep2012 import dados_localOferta as localOferta
-from database.inep2012 import dados_instituicao as ies
-from database.inep2012 import dados_curso as curso
-from database.inep2012 import dados_aluno as aluno
-from database.inep2012 import dados_docente as docente
+from database import db
+'''
 import sys
 
 diretorio = raw_input("Pasta da base de dados: ")
+#diretorio = "/media/elias/4DF85F7166976ABF/CEFET/Projeto Maurilio/microdados_educacao_superior_2012"
 
-ies.txt2db(diretorio)
-localOferta.txt2db(diretorio)
-curso.txt2db(diretorio)
-docente.txt2db(diretorio)
-aluno.txt2db(diretorio)
+db.carregaINEP2012(diretorio)
 
 sys.exit(0)
+'''
+
+res = db.sqlSelectGeneratorSearchFilter(tabelas=['inep2012.curso'], camposDeBusca=[('in_gratuito',True)],
+        camposDeFiltro=[('no_curso', 'CIÊNCIA % COMPUTAÇÃO'), ('no_curso', 'ENGENHARIA % COMPUTAÇÃO')])
+for i in res:
+    print i
+print len(res)

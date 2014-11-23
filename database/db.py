@@ -2,9 +2,12 @@
 # ou seja, e uma abstracao para o banco de dados
 # facilitando se precisar alterar o banco
 
-from codecs import encode
 import psycopg2 as pg
 import sys
+
+
+
+
 
 try:
     conn = pg.connect("dbname='projetom' user='projetom' host='localhost' password='maurilio'")
@@ -13,6 +16,25 @@ except:
     print "Nao foi possivel conectar ao banco de dados"
     raw_input('Pressione enter para encerrar o programa')
     sys.exit(1)
+    
+    
+    
+    
+    
+def carregaINEP2012(diretorio):
+    from database.inep2012 import dados_localOferta as localOferta
+    from database.inep2012 import dados_instituicao as ies
+    from database.inep2012 import dados_curso as curso
+    from database.inep2012 import dados_aluno as aluno
+    from database.inep2012 import dados_docente as docente
+    ies.txt2db(diretorio)
+    localOferta.txt2db(diretorio)
+    curso.txt2db(diretorio)
+    docente.txt2db(diretorio)
+    aluno.txt2db(diretorio)
+
+
+
 
 
 def query(sql): #executa uma query sql
@@ -25,19 +47,141 @@ def query(sql): #executa uma query sql
     except:
         return None
 
-
-def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no dicionario
-    #gerador de sql baseado no dicionario
-    sql = 'INSERT INTO %s( ' % tableName
-    sql2 = ') VALUES ( '
+def latin2utf(dictionary):
+    for i, j in dictionary:
+        try:
+            dictionary[i] = j.strip()
+        except:
+            None
+        try:
+            dictionary[i] = j.encode('utf-8')
+        except:
+            None
+            
+            
+            
+            
+            
+def sqlSelectGeneratorSearch(tabelas, camposDeRetorno=['* '], camposDeBusca=None, ordenacao=None):
+    '''
+    tabelas = lista com nome das tabelas na qual a pesquisa se feita
+    camposDeRetorno = lista com o nome dos campos a serem retornados (identificar tabela)
+        caso nao seja especificado, retornara todos os campos (cuidado ao usar multiplas tabelas ?)
+    camposDeBusca = lista de tuplas contendo os nomes dos campos e os valores aos quais devem ser iguais
+        caso nao seja especificado nao havera filtragem
+    ordenacao = campo utilizado para ordenar os resultados
+        caso nao seja especificado nao ordenara os resultados
+    ''' 
+    sql = "SELECT"
+    latin2utf(camposDeBusca)
+    
+    for i in camposDeRetorno:
+        sql += " %s," % i
+    sql = sql[:-1] #retira a ultima virgula
+    
+    sql += " FROM"
+    for i in tabelas:
+        sql += " %s," % i
+    sql = sql[:-1] #retira a ultima virgula
+        
     values = []
-    for i in dictionary:
-        sql += i + ","
-        sql2 += "%s," 
-        values.append((str(dictionary[i])).strip())
-    sql = sql[:-1]
-    sql2 = sql2[:-1]
-    return cur.mogrify(sql + sql2 + ')', tuple(values))
+    if camposDeBusca != None:
+        sql += " WHERE"
+        for i, j in camposDeBusca:
+            sql += " %s" % i
+            sql += " = %s and"
+            values += [j]
+        sql = sql[:-3] #retira o ultimo and
+    
+    if ordenacao != None:
+        sql += " ORDER BY %s" % ordenacao
+        
+    return query(cur.mogrify(sql + ';', tuple(values)))
+
+def sqlSelectGeneratorFilter(tabelas, camposDeRetorno=['* '], camposDeFiltro=None, ordenacao=None):
+    '''
+    tabelas = lista com nome das tabelas na qual a pesquisa se feita
+    camposDeRetorno = lista com o nome dos campos a serem retornados (identificar tabela)
+        caso nao seja especificado, retornara todos os campos (cuidado ao usar multiplas tabelas ?)
+    camposDeFiltro = lista de tuplas contendo os nomes dos campos e os valores aos quais devem ser parecidos
+        caso nao seja especificado nao havera filtragem
+    ordenacao = campo utilizado para ordenar os resultados
+        caso nao seja especificado nao ordenara os resultados
+    ''' 
+    sql = "SELECT"
+    latin2utf(camposDeFiltro)
+    
+    for i in camposDeRetorno:
+        sql += " %s," % i
+    sql = sql[:-1] #retira a ultima virgula
+    
+    sql += " FROM"
+    for i in tabelas:
+        sql += " %s," % i
+    sql = sql[:-1] #retira a ultima virgula
+        
+    values = []
+    if camposDeFiltro != None:
+        sql += " WHERE"
+        for i, j in camposDeFiltro:
+            sql += " %s" % i
+            sql += " like %s or"
+            values += ['%' + j + '%']
+        sql = sql[:-3] #retira o ultimo or
+    
+    if ordenacao != None:
+        sql += " ORDER BY %s" % ordenacao
+        
+    return query(cur.mogrify(sql + ';', tuple(values)))
+
+def sqlSelectGeneratorSearchFilter(tabelas, camposDeRetorno=['* '], camposDeBusca=None, 
+        camposDeFiltro=None, ordenacao=None):
+    '''
+    tabelas = lista com nome das tabelas na qual a pesquisa se feita
+    camposDeRetorno = lista com o nome dos campos a serem retornados (identificar tabela)
+        caso nao seja especificado, retornara todos os campos (cuidado ao usar multiplas tabelas ?)
+    camposDeBusca = lista de tuplas contendo os nomes dos campos e os valores aos quais devem ser iguais
+        caso nao seja especificado nao havera filtragem
+    camposDeFiltro = lista de tuplas contendo os nomes dos campos e os valores aos quais devem ser parecidos
+        caso nao seja especificado nao havera filtragem
+    ordenacao = campo utilizado para ordenar os resultados
+        caso nao seja especificado nao ordenara os resultados
+    ''' 
+    sql = "SELECT"
+    latin2utf(camposDeFiltro)
+    
+    for i in camposDeRetorno:
+        sql += " %s," % i
+    sql = sql[:-1] #retira a ultima virgula
+    
+    sql += " FROM"
+    for i in tabelas:
+        sql += " %s," % i
+    sql = sql[:-1] #retira a ultima virgula
+        
+    values = []
+    if camposDeBusca != None:
+        sql += " WHERE"
+        for i, j in camposDeBusca:
+            sql += " %s" % i
+            sql += " = %s and"
+            values += [j]
+        
+    if camposDeFiltro != None:
+        sql += " ("
+        for i, j in camposDeFiltro:
+            sql += " %s" % i
+            sql += " like %s or"
+            values += ['%' + j + '%']
+        sql = sql[:-3] + ')' #retira o ultimo or
+    
+    if ordenacao != None:
+        sql += " ORDER BY %s" % ordenacao
+        
+    return query(cur.mogrify(sql + ';', tuple(values)))
+
+
+
 
 
 def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert baseado no dicionario
@@ -54,68 +198,46 @@ def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert 
 #    print sql + sql2 + ')'
     query(sql + sql2 + ')')
 
-
 def usePreparedInsert(statementName, dictionary): #prepara sql de insert baseado no dicionario
     #gerador de sql baseado no dicionario
     sql = 'EXECUTE %s_INS ( ' % statementName
     values=[]
-    for i in dictionary:
+    for i, j in dictionary:
         sql += "%s,"
-        values.append(dictionary[i] if dictionary[i]!="" else None)
+        values.append(j if j != "" else None)
     sql = sql[:-1]
     query(cur.mogrify(sql + ')', tuple(values)))
-	
-        
+
+def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no dicionario
+    #gerador de sql baseado no dicionario
+    sql = 'INSERT INTO %s( ' % tableName
+    sql2 = ') VALUES ( '
+    values = []
+    for i, j in dictionary:
+        sql += i + ","
+        sql2 += "%s," 
+        values.append((str(j)).strip())
+    sql = sql[:-1]
+    sql2 = sql2[:-1]
+    return cur.mogrify(sql + sql2 + ')', tuple(values))
+    
+
+
+
+     
 def pgAutoCommit(state = None): #altera o valor de auto-commit do postgres
     if state != None: #se passar parametro tenta alterar a politica
-	if type(state) != bool:
+        if type(state) != bool:
             raise TypeError
-	try:
+    try:
             conn.autocommit = state
-	except:
+    except:
             print "Erro ao alterar a politica de commits do banco de dados"
             raw_input('Pressione enter para encerrar o programa')
             sys.exit(1)
     else: # se nao passar parametro retorna o valor atual
-	return state
-    
+        return state
     
 def commit(): #executa commit na transacao
     conn.commit()
     
-    
-def latin2utf(dictionary):
-    for i in dictionary:
-        try:
-            dictionary[i] = dictionary[i].strip()
-        except:
-            None
-        try:
-            dictionary[i] = dictionary[i].encode('utf-8')
-        except:
-            None
-            
-            
-            
-#def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no dicionario
-#    #gerador de sql baseado no dicionario
-#    sql = 'INSERT INTO %s( ' % tableName
-#    sql2 = ') VALUES ( '
-#    for i in dictionary:
-#        sql += i + ","
-#        dictionary[i] = (str(dictionary[i])).strip()
-#        if dictionary[i] == "": #se n tiver nda insere null
-#            sql2 += "null,"
-#            continue
-#        elif dictionary[i] in ('True', 'False'): #se for bool insere
-#            sql2 += "%s," % dictionary[i]
-#            continue
-#        try: #tenta inserir numero
-#            if "E" in dictionary[i]:
-#                raise
-#            sql2 += "%s," % float(dictionary[i])
-#        except: #insere letra
-#            sql2 += "'%s'," % dictionary[i].replace("\'", "")
-#    sql = sql[:-1]
-#    sql2 = sql2[:-1]
-#    return sql + sql2 + ')'

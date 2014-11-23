@@ -6,7 +6,6 @@ import codecs
 
 def txt2db(diretorio):
     
-    #limpa/cria as tabelas a serem usadas	
     db.commit()
     db.pgAutoCommit(False)
     db.query("DROP TABLE IF EXISTS INEP2012.MUNICIPIO")
@@ -63,9 +62,9 @@ def txt2db(diretorio):
     for linha in codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1'):
         
         dic = {}
-	dic2 = {}
+        dic2 = {}
         
-	#LEITURA DO ARQUIVO
+        #LEITURA DO ARQUIVO
         dic['CO_IES'] = linha[0:8]
         dic['NO_IES'] = linha[8:208].strip()
         dic['CO_MANTENEDORA'] = linha[208:216]

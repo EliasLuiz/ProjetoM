@@ -6,8 +6,6 @@ import codecs
 
 def txt2db(diretorio):
     
-#    print "entrou em local"
-    
     #limpa/cria as tabelas a serem usadas
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.LOCAL_OFERTA")
@@ -26,7 +24,7 @@ def txt2db(diretorio):
         
     firstExec = True
 
-	
+
     for linha in codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1'):
 
         dic = {}
@@ -63,7 +61,7 @@ def txt2db(diretorio):
             db.commit()
             firstExec = False
             
-	db.usePreparedInsert('LOCAL_OFERTA', dic)
+        db.usePreparedInsert('LOCAL_OFERTA', dic)
 
 
     db.commit()
