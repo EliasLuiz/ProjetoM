@@ -1,12 +1,27 @@
+# -*- coding: latin -*-
+
 from database import db
 
 db.query("CREATE SCHEMA IF NOT EXISTS INEP2012")
+
+def carrega(diretorio):
+    from database.inep2012 import dados_localOferta as localOferta
+    from database.inep2012 import dados_instituicao as ies
+    from database.inep2012 import dados_curso as curso
+    from database.inep2012 import dados_aluno as aluno
+    from database.inep2012 import dados_docente as docente
+    ies.txt2db(diretorio)
+    localOferta.txt2db(diretorio)
+    curso.txt2db(diretorio)
+    docente.txt2db(diretorio)
+    aluno.txt2db(diretorio)
 
 def carregaCombobox():
     '''
     carrega os campos usados nos combobox de interface grafica
     gera listas globais cujos conteudos sao tuplas associando o codigo com o valor
     '''
+    
     
     ### ALUNO ###
     global alunoRaca
@@ -25,10 +40,55 @@ def carregaCombobox():
     global alunoPublica
     alunoPublica = [(0, "Não"),(1, "Sim"),(2, "não dispõe da informação")]
     
-
-
     
-
-
-
-
+    ### CURSO ###
+    global cursoCursosComp
+    cursoCursosComp = [("FORMAÇÃO DE PROFESSOR DE COMPUTAÇÃO (INFORMÁTICA)",
+                        "Formação de professor de computação (informática)"),
+                       ("GESTÃO DA INFORMAÇÃO",
+                        "Gestão da informação"),
+                       ("GESTÃO DA SEGURANÇA",
+                        "Gestão da segurança"),
+                       ("ADMINISTRAÇÃO DE REDES",
+                        "Administração de redes"),
+                       ("BANCO DE DADOS",
+                        "Banco de dados"),
+                       ("CIÊNCIA DA COMPUTAÇÃO",
+                        "Ciência da computação"),
+                       ("TECNOLOGIA DA INFORMAÇÃO",
+                        "Tecnologia da informação"),
+                       ("TECNOLOGIA EM DESENVOLVIMENTO DE SOFTWARES",
+                        "Tecnologia em desenvolvimento de softwares"),
+                       ("ANÁLISE DE SISTEMAS",
+                        "Análise de sistemas"),
+                       ("ANÁLISE E DESENVOLVIMENTO DE SISTEMAS (TECNÓLOGO)",
+                        "Análise e Desenvolvimento de Sistemas (Tecnólogo)"),
+                       ("SEGURANÇA DA INFORMAÇÃO",
+                        "Segurança da informação"),
+                       ("SISTEMAS DE INFORMAÇÃO",
+                        "Sistemas de informação"),
+                       ("USO DA INTERNET",
+                        "Uso da internet"),
+                       ("ENGENHARIA D_ COMPUTAÇÃO",
+                        "Engenharia de computação"),
+                       ("ENGENHARIA DE CONTROLE E AUTOMAÇÃO",
+                        "Engenharia de controle e automação"),
+                       ("ENGENHARIA DE REDES DE COMUNICAÇÃO",
+                        "Engenharia de redes de comunicação"),
+                       ("ENGENHARIA DE TELECOMUNICAÇÕES",
+                        "Engenharia de telecomunicações"),
+                       ("ENGENHARIA ELETRÔNICA",
+                        "Engenharia eletrônica"),
+                       ("ENGENHARIA MECATRÔNICA",
+                        "Engenharia mecatrônica"),
+                       ("TECNOLOGIA DIGITAL",
+                        "Tecnologia digital"),
+                       ("TECNOLOGIA ELETRÔNICA",
+                        "Tecnologia eletrônica"),
+                       ("TECNOLOGIA MECATRÔNICA",
+                        "Tecnologia mecatrônica"),
+                       ("TELECOMUNICAÇÕES",
+                        "Telecomunicações"),
+                       ("TECNOLOGIA EM GESTÃO DE TELECOMUNICAÇÕES",
+                        "Tecnologia em gestão de telecomunicações"),]        
+    

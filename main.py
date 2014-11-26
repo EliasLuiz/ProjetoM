@@ -2,6 +2,7 @@
 # -*- coding: latin -*-
 
 from database import db
+import gui
 
 '''
 import sys

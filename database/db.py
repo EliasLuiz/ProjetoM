@@ -21,22 +21,6 @@ except:
     
     
     
-def carregaINEP2012(diretorio):
-    from database.inep2012 import dados_localOferta as localOferta
-    from database.inep2012 import dados_instituicao as ies
-    from database.inep2012 import dados_curso as curso
-    from database.inep2012 import dados_aluno as aluno
-    from database.inep2012 import dados_docente as docente
-    ies.txt2db(diretorio)
-    localOferta.txt2db(diretorio)
-    curso.txt2db(diretorio)
-    docente.txt2db(diretorio)
-    aluno.txt2db(diretorio)
-
-
-
-
-
 def query(sql): #executa uma query sql
     try:
         cur.execute(sql)

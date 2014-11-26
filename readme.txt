@@ -29,10 +29,12 @@
                 PyQt4
                 
     2.3 - IDE:
-        2.3.1 - Netbeans 8.0:
-            Plugin Python
-        2.3.2 - Eclipse 4.4.1:
-            Plugin PyDev
+        Netbeans 8.0.1:
+        2.3.1 - Plugins Netbeans:
+            Python
+        Eclipse 4.4.1:
+        2.3.2 - Plugins Eclipse:
+            PyDev
 
     2.4 - Controle de Versão:
         Git 1.9.1
@@ -56,7 +58,7 @@
                     Arquivo de interface com a biblioteca de banco de dados.
                     Caso seja necessário mudar de banco somente este arquivo
                     será alterado.
-                /database/inep2012
+                /inep2012
                     Pacote contendo os módulos de manipulacao da base de dados
                     do INEP - Censo da Educação Superior 2012.
                     dados_aluno.py:
@@ -76,6 +78,10 @@
                         /DADOS/LOCAL_OFERTA.txt da base de dados.
             /gui
                 Pacote contendo os módulos de criação de interface gráfica.
+                mainWindow.py:
+                    Janela principal do programa
+                fileDialog.py:
+                    Modulo para seleção de arquivos e diretórios
 
     3.2 - Nomeclaturas de Estruturas:
 
@@ -332,7 +338,6 @@
                 IN_INGRESSO_OUTRAS_FORMAS BOOLEAN, 
                 ANO_INGRESSO INT
             
-
     3.4 - Valores de Saída do Programa:
         0 - O programa finalizou corretamente
         1 - Não foi possível conectar ao banco de dados

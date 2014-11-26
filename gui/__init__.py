@@ -1,9 +1,12 @@
 from PyQt4 import QtGui
 import sys
-import mainWindow as mw
+from database import db
+
+from gui import inep2012
 
 app = QtGui.QApplication(sys.argv)
 
-win = mw.MainWindow()
+aux = inep2012.MainWindow()
+aux.show()
 
 sys.exit(app.exec_())
