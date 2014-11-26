@@ -28,6 +28,7 @@ def txt2db(diretorio):
         CO_PAIS_ORIGEM_ALUNO INT, 
         DS_PAIS_ORIGEM_ALUNO VARCHAR(80), 
         CO_MUNICIPIO_NASCIMENTO INT, 
+        DS_MUNICIPIO_NASCIMENTO VARCHAR(150),
         CO_ALUNO_SITUACAO INT, 
         DS_ALUNO_SITUACAO VARCHAR(41), 
         IN_ALUNO_DEF_TGD_SUPER BOOLEAN,
@@ -138,7 +139,7 @@ def txt2db(diretorio):
         #dic['CO_UF_NASCIMENTO'] = linha[983:991]
         #dic['DS_UF_NASCIMENTO'] = linha[991:1021].strip()
         dic['CO_MUNICIPIO_NASCIMENTO'] = linha[1021:1029]
-        #dic['DS_MUNICIPIO_NASCIMENTO'] = linha[1029:1179].strip()
+        dic['DS_MUNICIPIO_NASCIMENTO'] = linha[1029:1179].strip()
         dic['CO_ALUNO_SITUACAO'] = linha[1179:1187]
         dic['DS_ALUNO_SITUACAO'] = linha[1187:1228].strip()
         dic['IN_ALUNO_DEF_TGD_SUPER'] = linha[1228:1236] == '       1'

@@ -1,7 +1,8 @@
 #!/usr/bin/python
-# -.- coding:latin -.-
+# -*- coding: latin -*-
 
 from database import db
+
 '''
 import sys
 
@@ -13,8 +14,10 @@ db.carregaINEP2012(diretorio)
 sys.exit(0)
 '''
 
+'''
 res = db.sqlSelectGeneratorSearchFilter(tabelas=['inep2012.curso'], camposDeBusca=[('in_gratuito',True)],
         camposDeFiltro=[('no_curso', 'CIÊNCIA % COMPUTAÇÃO'), ('no_curso', 'ENGENHARIA % COMPUTAÇÃO')])
 for i in res:
     print i
 print len(res)
+'''
