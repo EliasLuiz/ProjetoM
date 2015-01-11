@@ -32,7 +32,7 @@ def query(sql): #executa uma query sql
         return None
 
 def latin2utf(dictionary):
-    for i, j in dictionary:
+    for i, j in dictionary.iteritems():
         try:
             dictionary[i] = j.strip()
         except:
@@ -179,18 +179,21 @@ def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert 
         cont+=1
     sql = sql[:-1]
     sql2 = sql2[:-1]
-#    print sql + sql2 + ')'
-    query(sql + sql2 + ')')
+    sql = sql + sql2 + ')'
+    print sql
+    query(sql)
 
 def usePreparedInsert(statementName, dictionary): #prepara sql de insert baseado no dicionario
     #gerador de sql baseado no dicionario
     sql = 'EXECUTE %s_INS ( ' % statementName
     values=[]
-    for i, j in dictionary:
+    for i, j in dictionary.iteritems():
         sql += "%s,"
         values.append(j if j != "" else None)
     sql = sql[:-1]
-    query(cur.mogrify(sql + ')', tuple(values)))
+    sql = cur.mogrify(sql + ')', tuple(values))
+#    print sql
+    query(sql)
 
 def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no dicionario
     #gerador de sql baseado no dicionario
@@ -203,7 +206,8 @@ def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no di
         values.append((str(j)).strip())
     sql = sql[:-1]
     sql2 = sql2[:-1]
-    return cur.mogrify(sql + sql2 + ')', tuple(values))
+    sql = cur.mogrify(sql + sql2 + ')', tuple(values))
+    return sql
     
 
 

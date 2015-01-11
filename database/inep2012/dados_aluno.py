@@ -138,7 +138,10 @@ def txt2db(diretorio):
         dic['DS_PAIS_ORIGEM_ALUNO'] = linha[903:983].strip()
         #dic['CO_UF_NASCIMENTO'] = linha[983:991]
         #dic['DS_UF_NASCIMENTO'] = linha[991:1021].strip()
-        dic['CO_MUNICIPIO_NASCIMENTO'] = linha[1021:1029]
+        try:
+            dic['CO_MUNICIPIO_NASCIMENTO'] = int(linha[1021:1029])
+        except:
+            dic['CO_MUNICIPIO_NASCIMENTO'] = None
         dic['DS_MUNICIPIO_NASCIMENTO'] = linha[1029:1179].strip()
         dic['CO_ALUNO_SITUACAO'] = linha[1179:1187]
         dic['DS_ALUNO_SITUACAO'] = linha[1187:1228].strip()
@@ -196,8 +199,14 @@ def txt2db(diretorio):
         dic['IN_BOLSA_EXTENSAO'] = linha[1666:1674] == '       1'
         dic['IN_BOLSA_MONITORIA'] = linha[1674:1682] == '       1'
         dic['IN_BOLSA_PESQUISA'] = linha[1682:1690] == '       1'
-        dic['TP_PROCEDE_EDUC_PUBLICA'] = linha[1690:1698]
-        dic['NU_SEMESTRE_CONCLUSAO'] = linha[1698:1706]
+        try:
+            dic['TP_PROCEDE_EDUC_PUBLICA'] = int(linha[1690:1698])
+        except:
+            dic['TP_PROCEDE_EDUC_PUBLICA'] = None
+        try:
+            dic['NU_SEMESTRE_CONCLUSAO'] = int(linha[1698:1706])
+        except:
+            dic['NU_SEMESTRE_CONCLUSAO'] = None
         dic['IN_ALUNO_PARFOR'] = linha[1706:1714] == '       1'
         ############### VARIAVEIS DERIVADAS ################
         dic['IN_MATRICULA'] = linha[1714:1722] == '       1'
@@ -205,7 +214,10 @@ def txt2db(diretorio):
         dic['IN_INGRESSO_TOTAL'] = linha[1730:1738] == '       1'
         dic['IN_INGRESSO_PROCESSO_SELETIVO'] = linha[1738:1746] == '       1'
         dic['IN_INGRESSO_OUTRAS_FORMAS'] = linha[1746:1754] == '       1'
-        dic['ANO_INGRESSO'] = linha[1754:1758]
+        try:
+            dic['ANO_INGRESSO'] = int(linha[1754:1758])
+        except:
+            dic['ANO_INGRESSO'] = None
         
         
         

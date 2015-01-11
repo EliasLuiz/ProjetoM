@@ -90,7 +90,10 @@ def txt2db(diretorio):
         #dic['CO_ORGANIZACAO_ACADEMICA'] = linha[316:324]
         #dic['DS_ORGANIZACAO_ACADEMICA'] = linha[324:424].strip()
         ############### DADOS DO CURSO ################
-        dic['CO_MUNICIPIO_CURSO'] = linha[424:432]
+        try:
+            dic['CO_MUNICIPIO_CURSO'] = int(linha[424:432])
+        except:
+            dic['CO_MUNICIPIO_CURSO'] = None
         #dic['NO_MUNICIPIO_CURSO'] = linha[432:582].strip()
         #dic['CO_UF_CURSO'] = linha[582:590]
         #dic['SGL_UF_CURSO'] = linha[590:592]
@@ -106,7 +109,10 @@ def txt2db(diretorio):
         dic['NO_OCDE_AREA_ESPECIFICA'] = linha[1114:1234].strip()
         dic['CO_OCDE_AREA_DETALHADA'] = linha[1234:1246].strip()
         dic['NO_OCDE_AREA_DETALHADA'] = linha[1246:1366].strip()
-        dic['CO_GRAU_ACADEMICO'] = linha[1366:1374]
+        try:
+            dic['CO_GRAU_ACADEMICO'] = int(linha[1366:1374])
+        except:
+            dic['CO_GRAU_ACADEMICO'] = None
         dic['DS_GRAU_ACADEMICO'] = linha[1374:1386].strip()
         dic['CO_MODALIDADE_ENSINO'] = linha[1386:1394]
         dic['DS_MODALIDADE_ENSINO'] = linha[1394:1405].strip()
@@ -114,7 +120,6 @@ def txt2db(diretorio):
         dic['DS_NIVEL_ACADEMICO'] = linha[1413:1446].strip()
         dic['IN_GRATUITO'] = linha[1446:1454] == '       1'
         dic['TP_ATRIBUTO_INGRESSO'] = linha[1454:1462]
-        dic['CO_LOCAL_OFERTA'] = linha[1462:1470]
         dic['NU_CARGA_HORARIA'] = linha[1470:1478]
         dic['DT_INICIO_FUNCIONAMENTO'] = linha[1478:1516]
         dic['DT_AUTORIZACAO_CURSO'] = linha[1516:1554]
@@ -135,55 +140,79 @@ def txt2db(diretorio):
         dic['IN_MATUTINO_CURSO'] = linha[1666:1674] == '       1'
         dic['IN_NOTURNO_CURSO'] = linha[1674:1682] == '       1'
         dic['IN_VESPERTINO_CURSO'] = linha[1682:1690] == '       1'
-        dic['NU_PERC_CARGA_HOR_DISTANCIA'] = linha[1690:1698]
-        dic['NU_INTEGRALIZACAO_MATUTINO'] = linha[1698:1706]
-        dic['NU_INTEGRALIZACAO_VESPERTINO'] = linha[1706:1714]
-        dic['NU_INTEGRALIZACAO_NOTURNO'] = linha[1714:1722]
-        dic['NU_INTEGRALIZACAO_INTEGRAL'] = linha[1722:1730]
-        dic['NU_INTEGRALIZACAO_EAD'] = linha[1730:1738]
         try:
-            dic['QT_INSCRITOS_ANO_EAD'] = linha[1738:1746]
+            dic['NU_PERC_CARGA_HOR_DISTANCIA'] = float(linha[1690:1698])
+        except:
+            dic['NU_PERC_CARGA_HOR_DISTANCIA'] = None
+        try:
+            dic['NU_INTEGRALIZACAO_MATUTINO'] = float(linha[1698:1706])
+        except:
+            dic['NU_INTEGRALIZACAO_MATUTINO'] = None
+        try:
+            dic['NU_INTEGRALIZACAO_VESPERTINO'] = float(linha[1706:1714])
+        except:
+            dic['NU_INTEGRALIZACAO_VESPERTINO'] = None
+        try:
+            dic['NU_INTEGRALIZACAO_NOTURNO'] = float(linha[1714:1722])
+        except:
+            dic['NU_INTEGRALIZACAO_NOTURNO'] = None
+        try:
+            dic['NU_INTEGRALIZACAO_INTEGRAL'] = float(linha[1722:1730])
+        except:
+            dic['NU_INTEGRALIZACAO_INTEGRAL'] = None
+        try:
+            dic['NU_INTEGRALIZACAO_EAD'] = float(linha[1730:1738])
+        except:
+            dic['NU_INTEGRALIZACAO_EAD'] = None
+        try:
+            dic['QT_INSCRITOS_ANO_EAD'] = int(linha[1738:1746])
         except:
             dic['QT_INSCRITOS_ANO_EAD'] = None
         try:
-            dic['QT_VAGAS_ANUAL_EAD'] = linha[1746:1754]
+            dic['QT_VAGAS_ANUAL_EAD'] = int(linha[1746:1754])
         except:
             dic['QT_VAGAS_ANUAL_EAD'] = None
         try:
-            dic['QT_VAGAS_INTEGRAL_PRES'] = linha[1754:1762]
+            dic['QT_VAGAS_INTEGRAL_PRES'] = int(linha[1754:1762])
         except:
             dic['QT_VAGAS_INTEGRAL_PRES'] = None
         try: 
-            dic['QT_VAGAS_MATUTINO_PRES'] = linha[1762:1770]
+            dic['QT_VAGAS_MATUTINO_PRES'] = int(linha[1762:1770])
         except:
             dic['QT_VAGAS_MATUTINO_PRES'] = None
         try: 
-            dic['QT_VAGAS_VESPERTINO_PRES'] = linha[1770:1778]
+            dic['QT_VAGAS_VESPERTINO_PRES'] = int(linha[1770:1778])
         except:
             dic['QT_VAGAS_VESPERTINO_PRES'] = None
         try: 
-            dic['QT_VAGAS_NOTURNO_PRES'] = linha[1778:1786]
+            dic['QT_VAGAS_NOTURNO_PRES'] = int(linha[1778:1786])
         except:
             dic['QT_VAGAS_NOTURNO_PRES'] = None
         try: 
-            dic['QT_INSCRITOS_MATUTINO_PRES'] = linha[1786:1794]
+            dic['QT_INSCRITOS_MATUTINO_PRES'] = int(linha[1786:1794])
         except:
             dic['QT_INSCRITOS_MATUTINO_PRES'] = None
         try: 
-            dic['QT_INSCRITOS_VESPERTINO_PRES'] = linha[1794:1802]
+            dic['QT_INSCRITOS_VESPERTINO_PRES'] = int(linha[1794:1802])
         except:
             dic['QT_INSCRITOS_VESPERTINO_PRES'] = None
         try: 
-            dic['QT_INSCRITOS_NOTURNO_PRES'] = linha[1802:1810]
+            dic['QT_INSCRITOS_NOTURNO_PRES'] = int(linha[1802:1810])
         except:
             dic['QT_INSCRITOS_NOTURNO_PRES'] = None
         try: 
-            dic['QT_INSCRITOS_INTEGRAL_PRES'] = linha[1810:1818]
+            dic['QT_INSCRITOS_INTEGRAL_PRES'] = int(linha[1810:1818])
         except:
             dic['QT_INSCRITOS_INTEGRAL_PRES'] = None
         ############### VARIAVEIS DERIVADAS ################
-        dic['QT_MATRICULA_CURSO'] = linha[1818:1826]
-        dic['QT_CONCLUINTE_CURSO'] = linha[1826:1834]
+        try:
+            dic['QT_MATRICULA_CURSO'] = int(linha[1818:1826])
+        except:
+            dic['QT_MATRICULA_CURSO'] = None
+        try:
+            dic['QT_CONCLUINTE_CURSO'] = int(linha[1826:1834])
+        except:
+            dic['QT_CONCLUINTE_CURSO'] = None
         dic['QT_INGRESSO_CURSO'] = linha[1834:1842]
         dic['QT_INGRESSO_PROCESSO_SELETIVO'] = linha[1842:1850]
         dic['QT_INGRESSO_OUTRA_FORMA'] = linha[1850:1858]

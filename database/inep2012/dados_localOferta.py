@@ -38,7 +38,7 @@ def txt2db(diretorio):
         #dic['SGL_UF_LOCAL_OFERTA'] = linha[182:184]
         dic['IN_SEDE'] = linha[184:192] == '       1' #transforma em bool
         try:   #algumas linhas vem com o campo vazio
-            dic['CO_CURSO_POLO'] = linha[192:200]
+            dic['CO_CURSO_POLO'] = int(linha[192:200])
         except:
             dic['CO_CURSO_POLO'] = None
         dic['CO_CURSO'] = linha[200:208]
