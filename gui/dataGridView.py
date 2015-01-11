@@ -2,10 +2,6 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-'''
-BUG: APOS EDITAR UM CAMPO O METODO SORT "QUEBRA"
-'''
-
 class DataGridView(QWidget):
 
     def __init__(self, dados, cabecalho=None, editavel=False):
@@ -15,7 +11,11 @@ class DataGridView(QWidget):
         self.table = QTableView()
 
         # set the table model
-        self.table.setModel(MyTableModel(dados, cabecalho, editavel, self))
+        if editavel:
+            self.table.setModel(MyTableModel(
+                    [list(i) for i in dados], list(cabecalho), editavel, self))
+        else:
+            self.table.setModel(MyTableModel(dados, cabecalho, editavel, self))
 
         # hide grid
         self.table.setShowGrid(True)
@@ -56,10 +56,14 @@ class MyTableModel(QAbstractTableModel):
         """
         super(MyTableModel, self).__init__()
         self.editavel = editavel
+        self.parent = parent
         
         self.dados = dados
         
         self.cabecalho = cabecalho
+        
+        parent.table.resizeColumnsToContents()
+        parent.table.resizeRowsToContents()
 
     def rowCount(self, parent):
         return len(self.dados)
@@ -79,7 +83,8 @@ class MyTableModel(QAbstractTableModel):
     def setData(self, index, value, role):
         if self.editavel:
             self.dados[index.row()][index.column()] = value.toPyObject()
-            print self.dados[index.row()][index.column()]
+            self.parent.table.resizeColumnsToContents()
+            self.parent.table.resizeRowsToContents()
             return True
         else:
             pass
@@ -96,9 +101,15 @@ class MyTableModel(QAbstractTableModel):
         return QVariant()
 
     def sort(self, Ncol, order):
-        self.emit(SIGNAL("layoutAboutToBeChanged()"))       
+        self.layoutAboutToBeChanged.emit()       
         if order == Qt.AscendingOrder:
             self.dados = sorted(self.dados, key=lambda array: array[Ncol])
         else:
             self.dados = sorted(self.dados, key=lambda array: array[Ncol], reverse=True)
         self.layoutChanged.emit()
+        
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = DataGridView(((1, 2, 3),(6, 5, 4)),('a', 'b', 'c'),True)
+    w.show()
+    sys.exit(app.exec_())
