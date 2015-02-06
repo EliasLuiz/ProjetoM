@@ -1,10 +1,15 @@
+#-*- coding: latin -*-
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+'''
+EDIT+SORT=BUG
+'''
+
 class DataGridView(QWidget):
 
-    def __init__(self, dados, cabecalho=None, editavel=False):
+    def __init__(self, dados, cabecalho=None, editavel=False, titulo=None):
         super(DataGridView, self).__init__()
 
         # create the view
@@ -39,6 +44,9 @@ class DataGridView(QWidget):
         # enable sorting
         self.table.setSortingEnabled(True)
         
+        if titulo != None:
+            self.setWindowTitle(titulo)
+        
         # layout
         self.layout = QVBoxLayout()        
 
@@ -64,21 +72,22 @@ class MyTableModel(QAbstractTableModel):
         
         parent.table.resizeColumnsToContents()
         parent.table.resizeRowsToContents()
+        
+        print self.rowCount(parent)
 
     def rowCount(self, parent):
         return len(self.dados)
 
     def columnCount(self, parent):
-        if len(self.dados) > 0: 
+        if self.dados!=None and len(self.dados) > 0: 
             return len(self.dados[0]) 
         return 0
-
     def data(self, index, role):
         if not index.isValid():
             return QVariant()
         elif role != Qt.DisplayRole:
             return QVariant()
-        return QVariant(self.dados[index.row()][index.column()])
+        return QVariant((str(self.dados[index.row()][index.column()])).decode('utf-8'))
 
     def setData(self, index, value, role):
         if self.editavel:
@@ -96,8 +105,11 @@ class MyTableModel(QAbstractTableModel):
             return Qt.ItemIsEnabled | Qt.ItemIsSelectable
 
     def headerData(self, col, orientation, role):
-        if self.cabecalho!=None and orientation == Qt.Horizontal and role == Qt.DisplayRole:
-            return QVariant(self.cabecalho[col])
+        if self.cabecalho != None and orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            if isinstance(self.cabecalho, str):
+                return QVariant(self.cabecalho)
+            else:
+                return QVariant(self.cabecalho[col])
         return QVariant()
 
     def sort(self, Ncol, order):
@@ -108,8 +120,12 @@ class MyTableModel(QAbstractTableModel):
             self.dados = sorted(self.dados, key=lambda array: array[Ncol], reverse=True)
         self.layoutChanged.emit()
         
+from database import db        
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = DataGridView(((1, 2, 3),(6, 5, 4)),('a', 'b', 'c'),True)
+    w = DataGridView(db.query("select no_municipio, no_ies from inep2012.municipio m, inep2012.curso c "+ 
+        "inep2012.local_oferta l, inep2012.ies i where co_municipio=co_municipio_local_oferta "+
+        "and l.co_ies=i.co_ies and l.co_curso=c.co_curso and ds_modalidade_ensino='A Distância'"),['no_municipio', 'no_ies'],False)
     w.show()
     sys.exit(app.exec_())
