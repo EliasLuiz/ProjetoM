@@ -9,7 +9,7 @@ EDIT+SORT=BUG
 
 class DataGridView(QWidget):
 
-    def __init__(self, dados, cabecalho=None, editavel=False, titulo=None):
+    def __init__(self, dados, cabecalho=None, titulo=None, editavel=False):
         super(DataGridView, self).__init__()
 
         # create the view
@@ -53,12 +53,14 @@ class DataGridView(QWidget):
         self.layout.addWidget(self.table)
         self.setLayout(self.layout)
         
+        self.show()
+        
 
 class MyTableModel(QAbstractTableModel):
     def __init__(self, dados, cabecalho=None, editavel=False, parent=None):
         """
         Args:
-            datain: lista de listas
+            dados: lista de listas
             cabecalho: lista de strings
             editavel: bool
         """
@@ -72,8 +74,6 @@ class MyTableModel(QAbstractTableModel):
         
         parent.table.resizeColumnsToContents()
         parent.table.resizeRowsToContents()
-        
-        print self.rowCount(parent)
 
     def rowCount(self, parent):
         return len(self.dados)
@@ -82,6 +82,7 @@ class MyTableModel(QAbstractTableModel):
         if self.dados!=None and len(self.dados) > 0: 
             return len(self.dados[0]) 
         return 0
+    
     def data(self, index, role):
         if not index.isValid():
             return QVariant()
@@ -124,8 +125,6 @@ from database import db
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = DataGridView(db.query("select no_municipio, no_ies from inep2012.municipio m, inep2012.curso c "+ 
-        "inep2012.local_oferta l, inep2012.ies i where co_municipio=co_municipio_local_oferta "+
-        "and l.co_ies=i.co_ies and l.co_curso=c.co_curso and ds_modalidade_ensino='A Distância'"),['no_municipio', 'no_ies'],False)
+    w = DataGridView(db.query("select * from inep2012.municipio"))
     w.show()
     sys.exit(app.exec_())

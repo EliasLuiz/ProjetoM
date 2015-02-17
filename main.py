@@ -11,9 +11,7 @@ import sys
 #inep2012.carrega(diretorio)
 
 app = QtGui.QApplication(sys.argv)
-w = dataGridView.DataGridView(db.query('''select distinct(i.no_ies) from inep2012.municipio m, 
-    inep2012.ies i, inep2012.local_oferta l where i.co_ies=l.co_ies 
-    and l.co_municipio_local_oferta=m.co_municipio and m.no_municipio='IPATINGA' '''),('no_ies'),False)
+w = dataGridView.DataGridView([['']],None)
 w.show()
 sys.exit(app.exec_())
 
