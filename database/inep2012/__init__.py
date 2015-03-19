@@ -10,10 +10,12 @@ def carrega(diretorio):
     from database.inep2012 import dados_curso as curso
     from database.inep2012 import dados_aluno as aluno
     from database.inep2012 import dados_docente as docente
-    #ies.txt2db(diretorio)
-    #localOferta.txt2db(diretorio)
-    #curso.txt2db(diretorio)
-    #docente.txt2db(diretorio)
+    ies.txt2db(diretorio)
+    localOferta.txt2db(diretorio)
+    #curso nao pode NUNCA, em hipotese ALGUMA, ser inserido antes
+    #    de local oferta
+    curso.txt2db(diretorio)
+    docente.txt2db(diretorio)
     aluno.txt2db(diretorio)
 
 def carregaCombobox():

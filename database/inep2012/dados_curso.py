@@ -1,5 +1,7 @@
-# realiza a leitura do arquivo /DADOS/CURSO.txt
-# cria uma tabela no banco e salva os dados lidos
+'''
+realiza a leitura do arquivo /DADOS/CURSO.txt
+cria uma tabela no banco e salva os dados lidos
+'''
 
 from database import db
 import codecs
@@ -10,7 +12,7 @@ def txt2db(diretorio):
     db.query("DROP TABLE IF EXISTS INEP2012.CURSO")
     db.query("""CREATE TABLE INEP2012.CURSO(
         CO_IES INT,
-        CO_MUNICIPIO_CURSO INT,
+        CO_MUNICIPIO INT,
         CO_CURSO INT,
         NO_CURSO VARCHAR(200),
         CO_OCDE VARCHAR(12),
@@ -91,9 +93,9 @@ def txt2db(diretorio):
         #dic['DS_ORGANIZACAO_ACADEMICA'] = linha[324:424].strip()
         ############### DADOS DO CURSO ################
         try:
-            dic['CO_MUNICIPIO_CURSO'] = int(linha[424:432])
+            dic['CO_MUNICIPIO'] = int(linha[424:432])
         except:
-            dic['CO_MUNICIPIO_CURSO'] = None
+            dic['CO_MUNICIPIO'] = None
         #dic['NO_MUNICIPIO_CURSO'] = linha[432:582].strip()
         #dic['CO_UF_CURSO'] = linha[582:590]
         #dic['SGL_UF_CURSO'] = linha[590:592]

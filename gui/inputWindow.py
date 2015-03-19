@@ -7,9 +7,6 @@ class InputWindow(QtGui.QMainWindow):
     def __init__(self, schema):
         super(InputWindow, self).__init__()
         
-        #widget = QtGui.QWidget()
-        #self.setCentralWidget(widget)
-        
         self.schema = schema
         self.setWindowTitle(schema.upper())
         
@@ -62,41 +59,41 @@ class InputWindow(QtGui.QMainWindow):
         WHERE table_schema = ''' + "'" + self.schema + "'" + '''
         ''')]
         
-        #grid.addLayout(self.cabecalhoLayout(), 0, 0)
         for i in tabelas:
             vbox.addLayout(self.tabelaLayout(i))
+            
+        self.count = QtGui.QCheckBox('Contar')
+        vbox.addWidget(self.count)
+            
+        self.submit = QtGui.QPushButton('Pesquisar')
+        self.submit.clicked.connect(self.submitCall)
+        #QtCore.QObject.connect(self.submit, QtCore.SIGNAL('clicked()'), self.submitCall)
+        
+        vbox.addWidget(self.submit)
         
         w.setLayout(vbox)
         scroll.setWidget(w)
         return scroll
-    
-    def cabecalhoLayout(self):
-        #FICA DESALINHADO - REPENSARR
-        
-        grid = QtGui.QGridLayout()
-        
-        self.campo = QtGui.QLabel('Campo')
-        self.retorno = QtGui.QLabel('Retornar')
-        self.igual = QtGui.QLabel('Igual a')
-        self.like = QtGui.QLabel('Like')
-        grid.addWidget(self.campo, 0, 0)
-        grid.addWidget(self.retorno, 0, 1)
-        grid.addWidget(self.igual, 0, 2)
-        grid.addWidget(self.like, 0, 3)
-        
-        return grid
         
     def tabelaLayout(self, tabela):
         '''
         tabela = string contendo o nome da tabela
         retorna um grid contendo os campos para cada coluna de uma tabela
         '''
-        #TRANSFORMAR EM GRID
-        vbox = QtGui.QVBoxLayout()
+        grid = QtGui.QGridLayout()
         
         #titulo
-        titulo = QtGui.QLabel(tabela.upper())
-        vbox.addWidget(titulo)
+        titulo = QtGui.QLabel("\n\n\n" + tabela.upper() + "\n\n")
+        grid.addWidget(titulo, 0, 0)
+        
+        campo = QtGui.QLabel('Campo')
+        retorno = QtGui.QLabel('Retornar')
+        igual = QtGui.QLabel('Igual a')
+        like = QtGui.QLabel('Like')
+        grid.addWidget(campo, 1, 0)
+        grid.addWidget(retorno, 1, 1)
+        grid.addWidget(igual, 1, 2)
+        grid.addWidget(like, 1, 3)
         
         colunas = [i[3] for i in db.query('''
             SELECT *
@@ -115,13 +112,10 @@ class InputWindow(QtGui.QMainWindow):
             self.tabelas[tabela].append(aux)
             
         for i in range(len(self.tabelas[tabela])):
-            aux = QtGui.QHBoxLayout()
             for j in range(1, len(self.tabelas[tabela][0])):
-                aux.addWidget(self.tabelas[tabela][i][j])
-            aux.addStretch(1)
-            vbox.addLayout(aux)
+                grid.addWidget(self.tabelas[tabela][i][j], i+2, j-1)
         
-        return vbox
+        return grid
         
         
     #ACOES DA CLASSE
@@ -138,8 +132,8 @@ class InputWindow(QtGui.QMainWindow):
             campos = db.camposRetornoSql(sql) 
             if campos[0] == '*':
                 campos = None
-            res = DataGridView(db.query(sql), campos)
-            res.show()
+            DataGridView(db.query(sql), campos)
+            db.commit()
         #aux = Inep2012Window()
         #aux.show()
         
@@ -149,6 +143,32 @@ class InputWindow(QtGui.QMainWindow):
         from database import inep2012
         
         inep2012.carrega(fileDialog.pickDirectory())
+        
+    def submitCall(self):
+        from gui.dataGridView import DataGridView
+        from database import db
+        
+        tabelas = []
+        camposDeRetorno = []
+        camposDeBusca = []
+        camposDeFiltro = []
+        
+        for tabela, matriz in self.tabelas.iteritems():
+            for coluna in matriz:
+                if coluna[2].isChecked():
+                    camposDeRetorno.append(coluna[0])
+                    if tabela not in tabelas:
+                        tabelas.append(tabela)
+                if str(coluna[3].text()) != "":
+                    if coluna[4].isChecked():
+                        camposDeFiltro.append(coluna[0])
+                    else:
+                        camposDeBusca.append(coluna[0]) 
+        
+        DataGridView(db.query(db.sqlSelectGeneratorSearchFilter(tabelas, camposDeRetorno,
+                camposDeBusca, camposDeFiltro)), camposDeRetorno)
+        db.commit()
+        
         
 if __name__ == "__main__":
     import sys

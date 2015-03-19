@@ -1,5 +1,7 @@
-# realiza a leitura do arquivo /DADOS/DOCENTE.txt
-# cria uma tabela no banco e salva os dados lidos
+'''
+realiza a leitura do arquivo /DADOS/DOCENTE.txt
+cria uma tabela no banco e salva os dados lidos
+'''
 
 from database import db
 import codecs

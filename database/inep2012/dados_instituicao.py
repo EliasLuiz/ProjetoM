@@ -1,5 +1,9 @@
-# realiza a leitura do arquivo /DADOS/INSTITUICAO.txt
-# cria uma tabela no banco e salva os dados lidos
+# -*- coding: latin -*-
+'''
+realiza a leitura do arquivo /DADOS/INSTITUICAO.txt
+cria duas tabela no banco e salva os dados lidos,
+    uma para instituição e outra para município
+'''
 
 from database import db
 import codecs
@@ -72,7 +76,7 @@ def txt2db(diretorio):
         dic['DS_CATEGORIA_ADMINISTRATIVA'] = linha[224:324].strip()
         dic['CO_ORGANIZACAO_ACADEMICA'] = linha[324:332]
         dic['DS_ORGANIZACAO_ACADEMICA'] = linha[332:432].strip()
-        dic2['CO_MUNICIPIO'] = dic['CO_MUNICIPIO_IES'] = linha[432:440]
+        dic2['CO_MUNICIPIO_IES'] = dic['CO_MUNICIPIO'] = linha[432:440]
         dic2['NO_MUNICIPIO'] = linha[440:590].strip()
         dic2['CO_UF'] = linha[590:598]
         dic2['SGL_UF'] = linha[598:600].strip()

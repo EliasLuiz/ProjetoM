@@ -1,8 +1,9 @@
 #-*- coding: latin -*-
-# modulo de interface com a biblioteca do banco (psycopg)
-# ou seja, e uma abstracao para o banco de dados
-# facilitando se precisar alterar o banco
-
+'''
+modulo de interface com a biblioteca do banco (psycopg)
+ou seja, e uma abstracao para o banco de dados
+facilitando se precisar alterar o banco
+'''
 import psycopg2 as pg
 import sys
 
@@ -17,10 +18,45 @@ except:
     print "Não foi possivel conectar ao banco de dados"
     raw_input('Pressione qualquer botão para encerrar o programa')
     sys.exit(1)
+
+
+grafos = {}
+#grafos é um dicionário que contem um "grafo" para cada schema do banco
+#esse grafo é a lista de adjacência, representada por um dicionário
+#cada entrada desse dicionário representa uma tabela e guarda uma lista com
+#as tabelas com as quais ela pode se ligar diretamente
+#o objetivo é ser capaz de descobrir quais tabelas são necessárias para
+#  conseguir gerar um determinado sql
+
+def iniciaSchema(schema):
+
+    global grafos
+
+    tabelas = [i[2] for i in query('''
+        SELECT * FROM information_schema.tables
+        WHERE table_schema = ''' + "'" + schema + "'" + '''
+        ''')]
+
+    dic = {}
+    for i in tabelas:
+        dic[i] = [i[3] for i in query('''
+            SELECT *
+            FROM information_schema.columns
+            WHERE table_schema = ''' + "'" + schema + ''''
+            AND table_name   = ''' + "'" + i + "'")]
+
+    for i in dic:
+        for j in dic:
+            if i != j:
+                if len(i) < len(j):
+                    for k in i:
+                        if k in j:
+                            #adiciona?
+                else:
     
     
-    
-    
+
+#funções gerais relativas ao banco    
     
 def query(sql): #executa uma query sql
     try:
@@ -46,6 +82,7 @@ def latin2utf(dictionary):
             
             
             
+#Geradores de sql para selects            
         
 def camposRetornoSql(sql):
     s = sql.lower()
@@ -126,7 +163,7 @@ def sqlSelectGeneratorFilter(tabelas, camposDeRetorno=['* '], camposDeFiltro=Non
         
     return query(cur.mogrify(sql + ';', tuple(values)))
 
-def sqlSelectGeneratorSearchFilter(tabelas, camposDeRetorno=None, camposDeBusca=None, 
+def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno=None, camposDeBusca=None, 
         camposDeFiltro=None, ordenacao=None):
     '''
     tabelas = lista com nome das tabelas na qual a pesquisa sera feita
@@ -170,6 +207,14 @@ def sqlSelectGeneratorSearchFilter(tabelas, camposDeRetorno=None, camposDeBusca=
             sql += " like %s or"
             values += ['%' + j + '%']
         sql = sql[:-3] + ')' #retira o ultimo or
+        
+    #if schema not in grafos:
+    #    iniciaGrafo(schema)
+    
+    ligacoes = grafos[schema].caminho(tabelas)
+    
+    #TODO
+    #Gerar WHERE da ligacao
     
     if ordenacao != None:
         sql += " ORDER BY %s" % ordenacao
@@ -178,7 +223,7 @@ def sqlSelectGeneratorSearchFilter(tabelas, camposDeRetorno=None, camposDeBusca=
 
 
 
-
+#Geradores de sql para inserts
 
 def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert baseado no dicionario
     #gerador de sql baseado no dicionario
@@ -199,7 +244,7 @@ def usePreparedInsert(statementName, dictionary): #prepara sql de insert baseado
     #gerador de sql baseado no dicionario
     sql = 'EXECUTE %s_INS ( ' % statementName
     values=[]
-    for i, j in dictionary.iteritems():
+    for _, j in dictionary.iteritems():
         sql += "%s,"
         values.append(j if j != "" else None)
     sql = sql[:-1]
@@ -223,7 +268,7 @@ def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no di
     
 
 
-
+#Manipulação de configurações do postgresql
      
 def pgAutoCommit(state = None): #altera o valor de auto-commit do postgres
     if state != None: #se passar parametro tenta alterar a politica
