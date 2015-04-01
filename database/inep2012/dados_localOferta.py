@@ -13,11 +13,10 @@ def txt2db(diretorio):
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.LOCAL_OFERTA")
     db.query("""CREATE TABLE INEP2012.LOCAL_OFERTA(
-        CO_LOCAL_OFERTA_IES INT,
+        CO_LOCAL_OFERTA INT,
         CO_IES INT,
         CO_MUNICIPIO INT,
         IN_SEDE BOOLEAN,
-        CO_CURSO_POLO INT,
         CO_CURSO INT,
         IN_LOCAL_OFERTA_NEAD BOOLEAN,
         IN_LOCAL_OFERTA_UAB BOOLEAN,
@@ -33,7 +32,7 @@ def txt2db(diretorio):
         dic = {}
 
         #LEITURA DO ARQUIVO
-        dic['CO_LOCAL_OFERTA_IES'] = linha[0:8]
+        dic['CO_LOCAL_OFERTA'] = linha[0:8]
         dic['CO_IES'] = linha[8:16]
         dic['CO_MUNICIPIO'] = linha[16:24]
         #dic['NO_MUNICIPIO_LOCAL_OFERTA'] = linha[24:174].strip()
@@ -44,7 +43,7 @@ def txt2db(diretorio):
         #    dic['CO_CURSO_POLO'] = int(linha[192:200])
         #except:
         #    dic['CO_CURSO_POLO'] = None
-        #dic['CO_CURSO'] = linha[200:208]
+        dic['CO_CURSO'] = linha[200:208]
         dic['IN_LOCAL_OFERTA_NEAD'] = linha[208:216] == '       1'
         dic['IN_LOCAL_OFERTA_UAB'] = linha[216:224] == '       1'
         dic['IN_LOCAL_OFERTA_REITORIA'] = linha[224:232] == '       1'
@@ -67,8 +66,8 @@ def txt2db(diretorio):
         db.usePreparedInsert('LOCAL_OFERTA', dic)
 
 
+
     db.commit()
-    #DROPAR REPETIDOS
 
 
 

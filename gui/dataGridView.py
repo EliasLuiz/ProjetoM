@@ -12,6 +12,8 @@ class DataGridView(QWidget):
     def __init__(self, dados, cabecalho=None, titulo=None, editavel=False):
         super(DataGridView, self).__init__()
 
+        print cabecalho
+
         # create the view
         self.table = QTableView()
 

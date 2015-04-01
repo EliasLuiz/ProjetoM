@@ -149,24 +149,29 @@ class InputWindow(QtGui.QMainWindow):
         from database import db
         
         tabelas = []
-        camposDeRetorno = []
-        camposDeBusca = []
-        camposDeFiltro = []
+        camposDeRetorno = {}
+        camposDeBusca = {}
+        camposDeFiltro = {}
         
         for tabela, matriz in self.tabelas.iteritems():
+            camposDeRetorno[tabela] = []
+            camposDeBusca[tabela] = []
+            camposDeFiltro[tabela] = []
             for coluna in matriz:
                 if coluna[2].isChecked():
-                    camposDeRetorno.append(coluna[0])
+                    camposDeRetorno[tabela].append(coluna[0])
                     if tabela not in tabelas:
                         tabelas.append(tabela)
-                if str(coluna[3].text()) != "":
+                if str((coluna[3].text()).toUtf8()) != "":
+                    if tabela not in tabelas:
+                        tabelas.append(tabela)
                     if coluna[4].isChecked():
-                        camposDeFiltro.append(coluna[0])
+                        camposDeFiltro[tabela].append((coluna[0], str((coluna[3].text()).toUtf8())))
                     else:
-                        camposDeBusca.append(coluna[0]) 
+                        camposDeBusca[tabela].append((coluna[0], str((coluna[3].text()).toUtf8())))
         
-        DataGridView(db.query(db.sqlSelectGeneratorSearchFilter(tabelas, camposDeRetorno,
-                camposDeBusca, camposDeFiltro)), camposDeRetorno)
+        DataGridView(db.sqlSelectGeneratorSearchFilter(self.schema, tabelas, camposDeRetorno,
+                camposDeBusca, camposDeFiltro), db.camposRetornoCabecalho(camposDeRetorno))
         db.commit()
         
         

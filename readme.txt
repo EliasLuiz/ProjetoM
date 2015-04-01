@@ -40,6 +40,9 @@
         Git 1.9.1
         2.4.1 - Repositório Remoto:
             https://github.com/EliasLuiz/ProjetoM
+            
+    2.5 - Sistema Operacional:
+    	Linux Mint 17.1 Rebecca
     
 
 3 - Padrões Adotados:
@@ -58,6 +61,10 @@
                     Arquivo de interface com a biblioteca de banco de dados.
                     Caso seja necessário mudar de banco somente este arquivo
                     será alterado.
+                grafo.py:
+                	Arquivo contendo uma estrutura de dados do tipo grafo adaptada
+                	para o problema. Utilizada para armazenar as ligações entre as
+                	tabelas e determinar a melhor ligação entre as tabelas.
                 /inep2012
                     Pacote contendo os módulos de manipulacao da base de dados
                     do INEP - Censo da Educação Superior 2012.
@@ -82,6 +89,8 @@
                     Janela principal do programa
                 fileDialog.py:
                     Modulo para seleção de arquivos e diretórios
+                inputWindow.py
+                	Janela de geração do sql para um determinado schema
 
     3.2 - Nomeclaturas de Estruturas:
 
@@ -99,12 +108,10 @@
                 NO_REGIAO VARCHAR(30), 
                 IN_CAPITAL BOOLEAN
             LOCAL_OFERTA
-                CO_LOCAL_OFERTA_IES INT,
+                CO_LOCAL_OFERTA INT,
                 CO_IES INT,
                 CO_MUNICIPIO_LOCAL_OFERTA INT,
                 IN_SEDE BOOLEAN,
-                CO_CURSO_POLO INT,
-                CO_CURSO INT,
                 IN_LOCAL_OFERTA_NEAD BOOLEAN,
                 IN_LOCAL_OFERTA_UAB BOOLEAN,
                 IN_LOCAL_OFERTA_REITORIA BOOLEAN,
@@ -150,6 +157,7 @@
             CURSO
                 CO_IES INT,
                 CO_MUNICIPIO_CURSO INT,
+                CO_LOCAL_OFERTA INT,
                 CO_CURSO INT,
                 NO_CURSO VARCHAR(200),
                 CO_OCDE VARCHAR(12),
