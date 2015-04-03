@@ -53,7 +53,7 @@ class Grafo:
             valor = tuple(valor)
         
         self.lista[elemento] = [ (vizinhos[i], pesos[i], valor[i]) for i in range(len(vizinhos)) ]
-        
+        '''
         if vizinhos2 == None:
             vizinhos2 = vizinhos
             
@@ -68,12 +68,13 @@ class Grafo:
             for _ in vizinhos:
                 valor2.append(None)
             valor2 = tuple(valor)
-        
+            
         for i in range(len(vizinhos2)):
             if vizinhos2[i] not in self.lista.keys():
                 self.lista[ vizinhos2[i] ] = []
             if (elemento, pesos2[i]) not in self.lista[ vizinhos2[i] ]:
                 self.lista[ vizinhos2[i] ].append( (elemento, pesos2[i], valor2[i]) )
+        '''
         
     def buscaLargura(self, raiz):
         '''
@@ -154,7 +155,7 @@ class Grafo:
             return self.__caminhaArvore(pai, pai[elemento]) + [elemento]
         
         
-    
+
 if __name__ == "__main__":
     g = Grafo()
     
@@ -165,4 +166,5 @@ if __name__ == "__main__":
     g.addElemento('I', ['L', 'C', 'A', 'D'], valor=['il', 'ic', 'ia', 'id'])
     g.addElemento('D', ['I'], valor=['di'])
     
+    print g
     print g.caminho(['A', 'L', 'M'])

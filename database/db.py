@@ -6,6 +6,7 @@ facilitando se precisar alterar o banco
 '''
 import psycopg2 as pg
 import sys
+import grafo
 
 
 
@@ -52,7 +53,7 @@ def iniciaSchema(schema):
             WHERE table_schema = ''' + "'" + schema + ''''
             AND table_name   = ''' + "'" + tabela + "'")]
             
-    #gera as ligacoes diretas
+    #identifica as ligacoes diretas
     ligacoes = {}
     for tabela1 in tabelas:
         ligacoes[tabela1] = []
@@ -66,8 +67,12 @@ def iniciaSchema(schema):
                 if t == tabela2 and (tabela1, c) not in ligacoes[tabela2]:
                     ligacoes[tabela2].append((tabela1, c))
     
-    #ajustar a base de dados
-    #somar com o grafo transposto
+    grafos[schema] = grafo.Grafo()
+    
+    for tabela, lig in ligacoes.iteritems():
+        grafos[schema].addElemento(tabela, [i[0] for i in lig], [int(query('''
+                select count(*) from ''' + schema + "." + i[0])[0][0]) for i in lig], [i[1] for i in lig],
+                None, None, None)
     
 
 #funções gerais relativas ao banco    
@@ -107,9 +112,11 @@ def camposRetornoSql(sql):
 
 def camposRetornoCabecalho(camposDeRetorno):
     res = []
+    if camposDeRetorno == None or camposDeRetorno == "count(*)":
+        return camposDeRetorno
     for i, j in camposDeRetorno.iteritems():
         for k in j:
-            res.append(" %s.%s," % (i, k))
+            res.append(" %s.%s" % (i, k))
     return res
     
 
@@ -129,12 +136,16 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
     ordenacao = campo utilizado para ordenar os resultados
         caso não seja especificado nao ordenara os resultados
     ''' 
+    
+    if schema not in grafos:
+        iniciaSchema(schema)
+    
     if camposDeRetorno == None:
         return []
     
     sql = "SELECT"
     
-    if camposDeRetorno != "*":
+    if camposDeRetorno != "*" and camposDeRetorno != "count(*)":
         latin2utf(camposDeRetorno)
     
     if camposDeBusca != None:
@@ -143,53 +154,64 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
     if camposDeFiltro != None:
         latin2utf(camposDeFiltro)
     
-    for i, j in camposDeRetorno.iteritems():
-        for k in j:
-            sql += " %s.%s," % (i, k)
-    sql = sql[:-1] #retira a ultima virgula
+    if camposDeRetorno == "count(*)":
+        sql += " %s" % camposDeRetorno
+    else:
+        for i, j in camposDeRetorno.iteritems():
+            for k in j:
+                sql += " %s.%s," % (i, k)
+        sql = sql[:-1] #retira a ultima virgula
+    
     
     sql += " FROM"
+    #busca as ligacoes entre as tabelas que geram o caminho
+    ligacoes = grafos[schema].caminho(tabelas)
+    #descobre as tabelas não-repetidas que participam do caminho
+    tabelas = []
+    for i in ligacoes:
+        for j in i:
+            tabelas.append(j[:j.find('.')])
+    tabelas = sorted(set(tabelas))
+    #adiciona ao sql
     for i in tabelas:
         sql += " %s.%s," % (schema, i)
     sql = sql[:-1] #retira a ultima virgula
     
-    '''
-    print camposDeRetorno
-    print camposDeBusca
-    print camposDeFiltro
-    '''
     
     values = []
-    if camposDeBusca != None:
-        sql += " WHERE"
-        for i, j in camposDeBusca.iteritems():
-            for k, l in j:
-                sql += " %s.%s" % (i, k)
-                sql += " = %s and"
-                values += [l]
+    sql += " WHERE"
+    busca = False
+    for i, j in camposDeBusca.iteritems():
+        for k, l in j:
+            sql += " %s.%s" % (i, k)
+            sql += " = %s and"
+            values += [l]
+            busca = True
+    for i, j in ligacoes:
+        sql += " %s = %s and" % (i, j)
+        busca = True
+    
         
-    if camposDeFiltro != None:
-        sql += " ("
-        for i, j in camposDeFiltro.iteritems():
-            for k, l in j:
-                sql += " %s.%s" % (i, k)
-                sql += " like %s or"
-                values += ['%' + l + '%']
+    sql += " ("
+    filtro = False
+    for i, j in camposDeFiltro.iteritems():
+        for k, l in j:
+            sql += " %s.%s" % (i, k)
+            sql += " like %s or"
+            values += ['%' + l + '%']
+            filtro = True
+    if filtro:
         sql = sql[:-3] + ')' #retira o ultimo or
-        
-    #if schema not in grafos:
-    #    iniciaGrafo(schema)
+    else:
+        sql = sql[:-6]
     
-    #ligacoes = grafos[schema].caminho(tabelas)
     
-    #TODO
-    #Gerar WHERE da ligacao
-    
-    if values == []:
-        sql = sql[:-6] + ';' #retira o  where se nao precisar
+    if not busca:
+        sql = sql[:-6] #retira o  where se nao precisar
     
     if ordenacao != None:
         sql += " ORDER BY %s" % ordenacao
+    
         
     return query(cur.mogrify(sql + ';', tuple(values)))
 
@@ -209,7 +231,6 @@ def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert 
     sql = sql[:-1]
     sql2 = sql2[:-1]
     sql = sql + sql2 + ')'
-    print sql
     query(sql)
 
 def usePreparedInsert(statementName, dictionary): #prepara sql de insert baseado no dicionario
@@ -259,8 +280,9 @@ def commit(): #executa commit na transacao
     conn.commit()
     
 
-iniciaSchema("inep2012")
-
+if __name__ == "__main__":
+    iniciaSchema("inep2012")
+    print grafos["inep2012"].caminho(['docente', 'municipio'])
 
 
 

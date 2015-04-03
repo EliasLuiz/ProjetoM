@@ -1,6 +1,7 @@
 #-*- coding: latin -*-
 from PyQt4 import QtGui, QtCore
 from database import db
+from gui.dataGridView import DataGridView
 
 
 class InputWindow(QtGui.QMainWindow):
@@ -120,8 +121,6 @@ class InputWindow(QtGui.QMainWindow):
         
     #ACOES DA CLASSE
     def sqlCall(self):
-        from gui.dataGridView import DataGridView
-        from database import db
         
         #abre janela de dialogo
         sql, ok = QtGui.QInputDialog.getText(self, 'Inserir SQL', 
@@ -140,13 +139,14 @@ class InputWindow(QtGui.QMainWindow):
         
     def loadCall(self):
         from gui import fileDialog
-        from database import inep2012
         
-        inep2012.carrega(fileDialog.pickDirectory())
+        if self.schema == "inep2012":
+            from database import inep2012
+            inep2012.carrega(fileDialog.pickDirectory())
+            
+        QtCore.QCoreApplication.instance().quit()
         
     def submitCall(self):
-        from gui.dataGridView import DataGridView
-        from database import db
         
         tabelas = []
         camposDeRetorno = {}
@@ -169,6 +169,9 @@ class InputWindow(QtGui.QMainWindow):
                         camposDeFiltro[tabela].append((coluna[0], str((coluna[3].text()).toUtf8())))
                     else:
                         camposDeBusca[tabela].append((coluna[0], str((coluna[3].text()).toUtf8())))
+        
+        if self.count.isChecked():
+            camposDeRetorno = 'count(*)'
         
         DataGridView(db.sqlSelectGeneratorSearchFilter(self.schema, tabelas, camposDeRetorno,
                 camposDeBusca, camposDeFiltro), db.camposRetornoCabecalho(camposDeRetorno))

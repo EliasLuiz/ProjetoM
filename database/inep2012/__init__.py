@@ -17,8 +17,8 @@ def carrega(diretorio):
     #    Motivo: curso faz gambiarra pra reestruturar a base
     #    do governo que precisa de local oferta no lugar
     curso.txt2db(diretorio)
-    docente.txt2db(diretorio)
-    aluno.txt2db(diretorio)
+    #docente.txt2db(diretorio)
+    #aluno.txt2db(diretorio)
 
 def carregaCombobox():
     '''
