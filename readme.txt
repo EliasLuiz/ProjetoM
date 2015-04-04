@@ -52,6 +52,7 @@
             Pasta raiz da aplicação.
             main.py:
                 Módulo inicial do programa
+                Cria uma janela MainWindow
             readme.txt:
                 Arquivo contendo os objetivos, tecnologias usadas e padrões
                 adotados na aplicação.
@@ -87,14 +88,16 @@
                 Pacote contendo os módulos de criação de interface gráfica.
                 mainWindow.py:
                     Janela principal do programa
+                inputWindow.py:
+                    Janela de geração do SQL para um determinado schema
+                dataGridView.py:
+                    Janela para exibir os resultados do SQL gerado pela
+                    inputWindow em formato tabular 
                 fileDialog.py:
                     Modulo para seleção de arquivos e diretórios
-                inputWindow.py
-                	Janela de geração do sql para um determinado schema
-
-    3.2 - Nomeclaturas de Estruturas:
-
-    3.3 - Nomeclaturas de Banco de Dados:
+                
+                
+        3.2 - Nomeclaturas de Banco de Dados:
         Cada base de dados deverá possuir seu próprio schema.
         As tabelas seram criadas de acordo com a conveniencia para execução de selects,
         mantendo nomes no mesmo padrão utilizado na base de dados.
@@ -110,7 +113,7 @@
             LOCAL_OFERTA
                 CO_LOCAL_OFERTA INT,
                 CO_IES INT,
-                CO_MUNICIPIO_LOCAL_OFERTA INT,
+                CO_MUNICIPIO INT,
                 IN_SEDE BOOLEAN,
                 IN_LOCAL_OFERTA_NEAD BOOLEAN,
                 IN_LOCAL_OFERTA_UAB BOOLEAN,
@@ -155,10 +158,9 @@
                 VL_DES_PESQUISA DECIMAL(14,2), 
                 VL_DES_OUTRAS DECIMAL(14,2)
             CURSO
-                CO_IES INT,
-                CO_MUNICIPIO_CURSO INT,
-                CO_LOCAL_OFERTA INT,
                 CO_CURSO INT,
+                CO_IES INT,
+                CO_LOCAL_OFERTA INT,
                 NO_CURSO VARCHAR(200),
                 CO_OCDE VARCHAR(12),
                 NO_OCDE VARCHAR(120),
@@ -346,6 +348,6 @@
                 IN_INGRESSO_OUTRAS_FORMAS BOOLEAN, 
                 ANO_INGRESSO INT
             
-    3.4 - Valores de Saída do Programa:
+    3.3 - Valores de Saída do Programa:
         0 - O programa finalizou corretamente
         1 - Não foi possível conectar ao banco de dados
