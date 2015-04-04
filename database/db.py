@@ -141,7 +141,7 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
         iniciaSchema(schema)
     
     if camposDeRetorno == None:
-        return []
+        return []        
     
     sql = "SELECT"
     
@@ -167,7 +167,8 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
     #busca as ligacoes entre as tabelas que geram o caminho
     ligacoes = grafos[schema].caminho(tabelas)
     #descobre as tabelas não-repetidas que participam do caminho
-    tabelas = []
+    if ligacoes != []:
+        tabelas = []
     for i in ligacoes:
         for j in i:
             tabelas.append(j[:j.find('.')])
@@ -203,16 +204,17 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
     if filtro:
         sql = sql[:-3] + ')' #retira o ultimo or
     else:
-        sql = sql[:-6]
+        sql = sql[:-2]
     
     
     if not busca:
         sql = sql[:-6] #retira o  where se nao precisar
-    
+        
     if ordenacao != None:
         sql += " ORDER BY %s" % ordenacao
     
-        
+
+    
     return query(cur.mogrify(sql + ';', tuple(values)))
 
 
@@ -278,87 +280,3 @@ def pgAutoCommit(state = None): #altera o valor de auto-commit do postgres
     
 def commit(): #executa commit na transacao
     conn.commit()
-    
-
-if __name__ == "__main__":
-    iniciaSchema("inep2012")
-    print grafos["inep2012"].caminho(['docente', 'municipio'])
-
-
-
-
-
-
-'''            
-def sqlSelectGeneratorSearch(tabelas, camposDeRetorno=['* '], camposDeBusca=None, ordenacao=None):
-    
-    tabelas = lista com nome das tabelas na qual a pesquisa se feita
-    camposDeRetorno = lista com o nome dos campos a serem retornados (identificar tabela)
-        caso nao seja especificado, retornara todos os campos (cuidado ao usar multiplas tabelas ?)
-    camposDeBusca = lista de tuplas contendo os nomes dos campos e os valores aos quais devem ser iguais
-        caso nao seja especificado nao havera filtragem
-    ordenacao = campo utilizado para ordenar os resultados
-        caso nao seja especificado nao ordenara os resultados
-     
-    sql = "SELECT"
-    latin2utf(camposDeBusca)
-    
-    for i in camposDeRetorno:
-        sql += " %s," % i
-    sql = sql[:-1] #retira a ultima virgula
-    
-    sql += " FROM"
-    for i in tabelas:
-        sql += " %s.%s," % i
-    sql = sql[:-1] #retira a ultima virgula
-        
-    values = []
-    if camposDeBusca != None:
-        sql += " WHERE"
-        for i, j in camposDeBusca:
-            sql += " %s" % i
-            sql += " = %s and"
-            values += [j]
-        sql = sql[:-3] #retira o ultimo and
-    
-    if ordenacao != None:
-        sql += " ORDER BY %s" % ordenacao
-        
-    return query(cur.mogrify(sql + ';', tuple(values)))
-
-def sqlSelectGeneratorFilter(tabelas, camposDeRetorno=['* '], camposDeFiltro=None, ordenacao=None):
-    
-    tabelas = lista com nome das tabelas na qual a pesquisa se feita
-    camposDeRetorno = lista com o nome dos campos a serem retornados (identificar tabela)
-        caso não seja especificado, retornara todos os campos (cuidado ao usar multiplas tabelas ?)
-    camposDeFiltro = lista de tuplas contendo os nomes dos campos e os valores aos quais devem ser parecidos
-        caso não seja especificado nao havera filtragem
-    ordenacao = campo utilizado para ordenar os resultados
-        caso não seja especificado nao ordenara os resultados
-     
-    sql = "SELECT"
-    latin2utf(camposDeFiltro)
-    
-    for i in camposDeRetorno:
-        sql += " %s," % i
-    sql = sql[:-1] #retira a ultima virgula
-    
-    sql += " FROM"
-    for i in tabelas:
-        sql += " %s," % i
-    sql = sql[:-1] #retira a ultima virgula
-        
-    values = []
-    if camposDeFiltro != None:
-        sql += " WHERE"
-        for i, j in camposDeFiltro:
-            sql += " %s" % i
-            sql += " like %s or"
-            values += ['%' + j + '%']
-        sql = sql[:-3] #retira o ultimo or
-    
-    if ordenacao != None:
-        sql += " ORDER BY %s" % ordenacao
-        
-    return query(cur.mogrify(sql + ';', tuple(values)))
-'''

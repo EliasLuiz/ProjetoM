@@ -5,8 +5,8 @@ from gui.dataGridView import DataGridView
 
 
 class InputWindow(QtGui.QMainWindow):
-    def __init__(self, schema):
-        super(InputWindow, self).__init__()
+    def __init__(self, schema, parent = None):
+        super(InputWindow, self).__init__(parent)
         
         self.schema = schema
         self.setWindowTitle(schema.upper())
@@ -17,31 +17,26 @@ class InputWindow(QtGui.QMainWindow):
         
         self.setCentralWidget(self.criaLayout())
         
+        self.resize(500, 1000)
+        
         
     #LAYOUT DA CLASSE
     def criaMenu(self):
         #acao de inserir sql diretamente
-        sqlAction = QtGui.QAction('&Inserir SQL', self)        
+        sqlAction = QtGui.QAction('Inserir &SQL', self)        
         sqlAction.setShortcut('Ctrl+S')
         sqlAction.setStatusTip('Insira comandos SQL diretamente no banco')
         sqlAction.triggered.connect(self.sqlCall)
         
-        #acao de carregar base de dados
-        loadAction = QtGui.QAction('&Carregar', self)        
-        loadAction.setShortcut('Ctrl+L')
-        loadAction.setStatusTip('Carregar base de dados INEP 2012')
-        loadAction.triggered.connect(self.loadCall)
-        
         #encerrar a aplicacao
-        quitAction = QtGui.QAction('&Sair', self)        
+        quitAction = QtGui.QAction('Sair', self)        
         quitAction.setShortcut('Ctrl+Q')
         quitAction.setStatusTip('Encerra o programa')
         quitAction.triggered.connect(QtCore.QCoreApplication.instance().quit)
 
         #criacao da barra de menu
-        menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&Banco')
-        fileMenu.addAction(loadAction)
+        menubar = QtGui.QMenuBar()
+        fileMenu = menubar.addMenu('Banco')
         fileMenu.addAction(sqlAction)
         fileMenu.addAction(quitAction)
     
@@ -68,7 +63,6 @@ class InputWindow(QtGui.QMainWindow):
             
         self.submit = QtGui.QPushButton('Pesquisar')
         self.submit.clicked.connect(self.submitCall)
-        #QtCore.QObject.connect(self.submit, QtCore.SIGNAL('clicked()'), self.submitCall)
         
         vbox.addWidget(self.submit)
         
@@ -136,16 +130,6 @@ class InputWindow(QtGui.QMainWindow):
         #aux = Inep2012Window()
         #aux.show()
         
-        
-    def loadCall(self):
-        from gui import fileDialog
-        
-        if self.schema == "inep2012":
-            from database import inep2012
-            inep2012.carrega(fileDialog.pickDirectory())
-            
-        QtCore.QCoreApplication.instance().quit()
-        
     def submitCall(self):
         
         tabelas = []
@@ -177,11 +161,3 @@ class InputWindow(QtGui.QMainWindow):
                 camposDeBusca, camposDeFiltro), db.camposRetornoCabecalho(camposDeRetorno))
         db.commit()
         
-        
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    w = InputWindow('inep2012')
-    w.show()
-    w.raise_()
-    sys.exit(app.exec_())

@@ -8,40 +8,37 @@ EDIT+SORT=BUG
 '''
 
 class DataGridView(QWidget):
-
     def __init__(self, dados, cabecalho=None, titulo=None, editavel=False):
         super(DataGridView, self).__init__()
 
-        # create the view
+        # cria a tabela
         self.table = QTableView()
 
-        # set the table model
+        # seta a tabela
         if editavel:
             self.table.setModel(MyTableModel(
                     [list(i) for i in dados], list(cabecalho), editavel, self))
         else:
             self.table.setModel(MyTableModel(dados, cabecalho, editavel, self))
 
-        # hide grid
+        # propriedades do grid
         self.table.setShowGrid(True)
 
-        # hide vertical header
+        # ajuste do cabecalho vertical
         vh = self.table.verticalHeader()
         vh.setVisible(False)
 
-        # set horizontal header properties
+        # ajuste do cabecalho horizontal
         hh = self.table.horizontalHeader()
         if cabecalho == None:
             hh.setVisible(False)
         #hh.setStretchLastSection(True)
 
-        # set column width to fit contents
+        # ajusta celulas ao conteudo
+        self.table.resizeRowsToContents()
         self.table.resizeColumnsToContents()
 
-        # set row height
-        self.table.resizeRowsToContents()
-
-        # enable sorting
+        # habilita ordenacao
         self.table.setSortingEnabled(True)
         
         if titulo != None:
@@ -52,6 +49,7 @@ class DataGridView(QWidget):
 
         self.layout.addWidget(self.table)
         self.setLayout(self.layout)
+        
         
         self.show()
         
@@ -75,13 +73,16 @@ class MyTableModel(QAbstractTableModel):
         parent.table.resizeColumnsToContents()
         parent.table.resizeRowsToContents()
 
+
     def rowCount(self, parent):
         return len(self.dados)
+
 
     def columnCount(self, parent):
         if self.dados!=None and len(self.dados) > 0: 
             return len(self.dados[0]) 
         return 0
+    
     
     def data(self, index, role):
         if not index.isValid():
@@ -89,6 +90,7 @@ class MyTableModel(QAbstractTableModel):
         elif role != Qt.DisplayRole:
             return QVariant()
         return QVariant((str(self.dados[index.row()][index.column()])).decode('utf-8'))
+
 
     def setData(self, index, value, role):
         if self.editavel:
@@ -99,11 +101,13 @@ class MyTableModel(QAbstractTableModel):
         else:
             pass
     
+    
     def flags(self, index):
         if self.editavel:
             return Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable
         else:
             return Qt.ItemIsEnabled | Qt.ItemIsSelectable
+
 
     def headerData(self, col, orientation, role):
         if self.cabecalho != None and orientation == Qt.Horizontal and role == Qt.DisplayRole:
@@ -113,6 +117,7 @@ class MyTableModel(QAbstractTableModel):
                 return QVariant(self.cabecalho[col])
         return QVariant()
 
+
     def sort(self, Ncol, order):
         self.layoutAboutToBeChanged.emit()       
         if order == Qt.AscendingOrder:
@@ -121,10 +126,3 @@ class MyTableModel(QAbstractTableModel):
             self.dados = sorted(self.dados, key=lambda array: array[Ncol], reverse=True)
         self.layoutChanged.emit()
         
-from database import db        
-        
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = DataGridView(db.query("select * from inep2012.municipio"))
-    w.show()
-    sys.exit(app.exec_())
