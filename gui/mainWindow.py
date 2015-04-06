@@ -1,6 +1,6 @@
 from PyQt4 import QtGui, QtCore
 from database import db
-from gui import inputWindow, fileDialog
+from gui import inputWindow, fileDialog, dataGridView
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -29,6 +29,12 @@ class MainWindow(QtGui.QMainWindow):
         inep2012.triggered.connect(self.loadCall)
         loadAction.addAction(inep2012)
         
+        #acao de inserir sql diretamente
+        sqlAction = QtGui.QAction('Inserir &SQL', self)        
+        sqlAction.setShortcut('Ctrl+S')
+        sqlAction.setStatusTip('Insira comandos SQL diretamente no banco')
+        sqlAction.triggered.connect(self.sqlCall)
+        
         #encerrar a aplicacao
         quitAction = QtGui.QAction('Sair', self)        
         quitAction.setShortcut('Ctrl+Q')
@@ -39,9 +45,10 @@ class MainWindow(QtGui.QMainWindow):
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('Arquivo')
         fileMenu.addMenu(loadAction)
+        fileMenu.addAction(sqlAction)
         fileMenu.addAction(quitAction)
 
-
+    #LAYOUT DA CLASSE
     def criaLayout(self):
         
         scroll = QtGui.QScrollArea()
@@ -68,7 +75,7 @@ de dados ''' + self.schemas[i][0].upper())
         scroll.setWidget(w)
         return scroll
     
-    
+    #ACOES DA CLASSE
     def criaJanela(self):
         
         sender = self.sender()
@@ -85,4 +92,21 @@ de dados ''' + self.schemas[i][0].upper())
             inep2012.carrega(fileDialog.pickDirectory())
             
         QtCore.QCoreApplication.instance().quit()
+        
+        
+    def sqlCall(self):
+        
+        #abre janela de dialogo
+        sql, ok = QtGui.QInputDialog.getText(self, 'Inserir SQL', 
+            'Insira o comando SQL:')
+        #executa sql e abre janela com resultado
+        if ok:
+            sql = str(sql)
+            campos = db.camposRetornoSql(sql) 
+            if campos[0] == '*':
+                campos = None
+            dataGridView.DataGridView(db.query(sql), campos, sql.upper())
+            db.commit()
+        #aux = Inep2012Window()
+        #aux.show()
         

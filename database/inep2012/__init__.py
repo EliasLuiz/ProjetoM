@@ -20,7 +20,7 @@ def carrega(diretorio):
     '''
     curso.txt2db(diretorio)
     docente.txt2db(diretorio)
-    aluno.txt2db(diretorio)
+    #aluno.txt2db(diretorio)
 
 def carregaCombobox():
     '''

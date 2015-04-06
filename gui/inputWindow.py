@@ -11,7 +11,7 @@ class InputWindow(QtGui.QMainWindow):
         self.schema = schema
         self.setWindowTitle(schema.upper())
         
-        self.criaMenu()
+        #self.criaMenu()
         
         self.statusBar()
         
@@ -21,12 +21,8 @@ class InputWindow(QtGui.QMainWindow):
         
         
     #LAYOUT DA CLASSE
+    '''
     def criaMenu(self):
-        #acao de inserir sql diretamente
-        sqlAction = QtGui.QAction('Inserir &SQL', self)        
-        sqlAction.setShortcut('Ctrl+S')
-        sqlAction.setStatusTip('Insira comandos SQL diretamente no banco')
-        sqlAction.triggered.connect(self.sqlCall)
         
         #encerrar a aplicacao
         quitAction = QtGui.QAction('Sair', self)        
@@ -37,9 +33,8 @@ class InputWindow(QtGui.QMainWindow):
         #criacao da barra de menu
         menubar = QtGui.QMenuBar()
         fileMenu = menubar.addMenu('Banco')
-        fileMenu.addAction(sqlAction)
         fileMenu.addAction(quitAction)
-    
+    '''
     
     def criaLayout(self):
         scroll = QtGui.QScrollArea()
@@ -114,22 +109,6 @@ class InputWindow(QtGui.QMainWindow):
         
         
     #ACOES DA CLASSE
-    def sqlCall(self):
-        
-        #abre janela de dialogo
-        sql, ok = QtGui.QInputDialog.getText(self, 'Inserir SQL', 
-            'Insira o comando SQL:')
-        #executa sql e abre janela com resultado
-        if ok:
-            sql = str(sql)
-            campos = db.camposRetornoSql(sql) 
-            if campos[0] == '*':
-                campos = None
-            DataGridView(db.query(sql), campos)
-            db.commit()
-        #aux = Inep2012Window()
-        #aux.show()
-        
     def submitCall(self):
         
         tabelas = []
@@ -137,6 +116,7 @@ class InputWindow(QtGui.QMainWindow):
         camposDeBusca = {}
         camposDeFiltro = {}
         
+        #leitura do input do usuario
         for tabela, matriz in self.tabelas.iteritems():
             camposDeRetorno[tabela] = []
             camposDeBusca[tabela] = []
@@ -147,17 +127,24 @@ class InputWindow(QtGui.QMainWindow):
                     if tabela not in tabelas:
                         tabelas.append(tabela)
                 if str((coluna[3].text()).toUtf8()) != "":
+                    valor = (coluna[3].text()).toUtf8()
+                    try:
+                        valor = float(valor)
+                    except:
+                        valor = str(valor)
                     if tabela not in tabelas:
                         tabelas.append(tabela)
                     if coluna[4].isChecked():
-                        camposDeFiltro[tabela].append((coluna[0], str((coluna[3].text()).toUtf8())))
+                        camposDeFiltro[tabela].append((coluna[0], valor))
                     else:
-                        camposDeBusca[tabela].append((coluna[0], str((coluna[3].text()).toUtf8())))
+                        camposDeBusca[tabela].append((coluna[0], valor))
         
         if self.count.isChecked():
             camposDeRetorno = 'count(*)'
         
-        DataGridView(db.sqlSelectGeneratorSearchFilter(self.schema, tabelas, camposDeRetorno,
-                camposDeBusca, camposDeFiltro), db.camposRetornoCabecalho(camposDeRetorno))
+        sql = db.sqlSelectGeneratorSearchFilter(self.schema, tabelas, camposDeRetorno,
+                camposDeBusca, camposDeFiltro)
+        
+        DataGridView(db.query(sql), db.camposRetornoCabecalho(camposDeRetorno), sql.upper())
         db.commit()
         

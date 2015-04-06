@@ -35,8 +35,8 @@ class DataGridView(QWidget):
         #hh.setStretchLastSection(True)
 
         # ajusta celulas ao conteudo
-        self.table.resizeRowsToContents()
         self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()
 
         # habilita ordenacao
         self.table.setSortingEnabled(True)

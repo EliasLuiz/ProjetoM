@@ -94,7 +94,21 @@ def latin2utf(dictionary):
         except:
             None
         try:
-            dictionary[i] = j.encode('utf-8')
+            dictionary[i] = (j.encode('utf-8')).upper()
+            dictionary[i] = dictionary[i].replace('á', 'Á')
+            dictionary[i] = dictionary[i].replace('ã', 'Ã')
+            dictionary[i] = dictionary[i].replace('à', 'À')
+            dictionary[i] = dictionary[i].replace('â', 'Â')
+            dictionary[i] = dictionary[i].replace('é', 'É')
+            dictionary[i] = dictionary[i].replace('ẽ', 'Ẽ')
+            dictionary[i] = dictionary[i].replace('ê', 'Ê')
+            dictionary[i] = dictionary[i].replace('í', 'Í')
+            dictionary[i] = dictionary[i].replace('ó', 'Ó')
+            dictionary[i] = dictionary[i].replace('ô', 'Ô')
+            dictionary[i] = dictionary[i].replace('õ', 'Õ')
+            dictionary[i] = dictionary[i].replace('ú', 'Ú')
+            dictionary[i] = dictionary[i].replace('ü', 'Ü')
+            dictionary[i] = dictionary[i].replace('ç', 'Ç')
         except:
             None
 
@@ -201,21 +215,18 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
             sql += " like %s or"
             values += ['%' + l + '%']
             filtro = True
+            
     if filtro:
         sql = sql[:-3] + ')' #retira o ultimo or
     else:
-        sql = sql[:-2]
-    
-    
-    if not busca:
-        sql = sql[:-6] #retira o  where se nao precisar
+        sql = sql[:-6]
+        if not busca:
+            sql = sql[:-2] #retira o  where se nao precisar
         
     if ordenacao != None:
         sql += " ORDER BY %s" % ordenacao
     
-
-    
-    return query(cur.mogrify(sql + ';', tuple(values)))
+    return cur.mogrify(sql + ';', tuple(values))
 
 
 
