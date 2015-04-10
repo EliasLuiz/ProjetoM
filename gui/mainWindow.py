@@ -58,16 +58,18 @@ class MainWindow(QtGui.QMainWindow):
         
         #busca do banco os schemas
         #  sera gerada uma inputWindow para cada janela
-        self.schemas = db.query("select schema_name from information_schema.schemata")
-        self.schemas.remove(('projetom',))
+        self.schemas = [i[0] for i in db.query('''select schema_name from
+                information_schema.schemata''')]
+        self.schemas.sort()
+        self.schemas.remove('projetom')
         
         self.botoes = []
         for i in self.schemas:
-            self.botoes.append(QtGui.QPushButton(i[0]))
+            self.botoes.append(QtGui.QPushButton(i))
             
         for i in range(len(self.botoes)):
             self.botoes[i].setStatusTip('''Abre janela para pesquisa na base
-de dados ''' + self.schemas[i][0].upper())
+de dados ''' + self.schemas[i].upper())
             self.botoes[i].clicked.connect(self.criaJanela)
             vbox.addWidget(self.botoes[i])
             
@@ -105,6 +107,7 @@ de dados ''' + self.schemas[i][0].upper())
             campos = db.camposRetornoSql(sql) 
             if campos[0] == '*':
                 campos = None
+            db.insereLog(sql)
             dataGridView.DataGridView(db.query(sql), campos, sql.upper())
             db.commit()
         #aux = Inep2012Window()

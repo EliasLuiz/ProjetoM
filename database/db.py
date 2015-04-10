@@ -7,6 +7,7 @@ facilitando se precisar alterar o banco
 import psycopg2 as pg
 import sys
 import grafo
+import codecs
 
 
 
@@ -81,11 +82,12 @@ def query(sql): #executa uma query sql
     try:
         cur.execute(sql)
     except pg.Error, e:
+        insereLog(e.pgerror)
         print e.pgerror + "SQL:" +  sql
     try:
         return cur.fetchall()
     except:
-        return None
+        return []
 
 def latin2utf(dictionary):
     for i, j in dictionary.iteritems():
@@ -94,25 +96,19 @@ def latin2utf(dictionary):
         except:
             None
         try:
+            minusculo = ('á', 'ã', 'à', 'â', 'é', 'ẽ', 'ê', 'í', 'ó', 'ô', 'õ', 'ú', 'ü', 'ç')
+            maiusculo = ('Á', 'Ã', 'À', 'Â', 'É', 'Ẽ', 'Ê', 'Í', 'Ó', 'Ô', 'Õ', 'Ú', 'Ü', 'Ç')
             dictionary[i] = (j.encode('utf-8')).upper()
-            dictionary[i] = dictionary[i].replace('á', 'Á')
-            dictionary[i] = dictionary[i].replace('ã', 'Ã')
-            dictionary[i] = dictionary[i].replace('à', 'À')
-            dictionary[i] = dictionary[i].replace('â', 'Â')
-            dictionary[i] = dictionary[i].replace('é', 'É')
-            dictionary[i] = dictionary[i].replace('ẽ', 'Ẽ')
-            dictionary[i] = dictionary[i].replace('ê', 'Ê')
-            dictionary[i] = dictionary[i].replace('í', 'Í')
-            dictionary[i] = dictionary[i].replace('ó', 'Ó')
-            dictionary[i] = dictionary[i].replace('ô', 'Ô')
-            dictionary[i] = dictionary[i].replace('õ', 'Õ')
-            dictionary[i] = dictionary[i].replace('ú', 'Ú')
-            dictionary[i] = dictionary[i].replace('ü', 'Ü')
-            dictionary[i] = dictionary[i].replace('ç', 'Ç')
+            for k in range(len(minusculo)):
+                dictionary[i] = dictionary[i].replace(minusculo[k], maiusculo[k])
         except:
             None
 
-            
+def insereLog(string):
+    from time import strftime
+    log = codecs.open('log.txt', 'a', 'latin-1')
+    log.write(strftime("[%d/%m/%Y %H:%M:%S] ") + string.decode("utf-8") + '\n')
+    
             
             
 #Geradores de sql para selects            
@@ -124,13 +120,21 @@ def camposRetornoSql(sql):
     fromPos = s.find('from')
     return [i.strip() for i in sql[selectPos:fromPos].split(',')]
 
-def camposRetornoCabecalho(camposDeRetorno):
+def camposRetornoCabecalho(schema, camposDeRetorno):
     res = []
     if camposDeRetorno == None or camposDeRetorno == "count(*)":
         return camposDeRetorno
-    for i, j in camposDeRetorno.iteritems():
-        for k in j:
-            res.append(" %s.%s" % (i, k))
+    for tabela, i in camposDeRetorno.iteritems():
+        if '*' in i: #se * busca todos os campos da tabela
+            res += [ "%s.%s" % (tabela, campo) for campo in 
+                    [i[3] for i in query('''
+                        SELECT *
+                        FROM information_schema.columns
+                        WHERE table_schema = ''' + "'" + schema + ''''
+                        AND table_name   = ''' + "'" + tabela + "'")]
+                    ]
+        for coluna in i:
+            res.append(" %s.%s" % (tabela, coluna))
     return res
     
 
@@ -225,8 +229,12 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
         
     if ordenacao != None:
         sql += " ORDER BY %s" % ordenacao
+        
+    sql = cur.mogrify(sql + ';', tuple(values))
     
-    return cur.mogrify(sql + ';', tuple(values))
+    insereLog(sql)
+    
+    return sql 
 
 
 

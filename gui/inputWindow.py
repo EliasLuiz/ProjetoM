@@ -1,7 +1,8 @@
 #-*- coding: latin -*-
 from PyQt4 import QtGui, QtCore
-from database import db
+from database import db, inep2012
 from gui.dataGridView import DataGridView
+import codecs
 
 
 class InputWindow(QtGui.QMainWindow):
@@ -49,6 +50,7 @@ class InputWindow(QtGui.QMainWindow):
         SELECT * FROM information_schema.tables 
         WHERE table_schema = ''' + "'" + self.schema + "'" + '''
         ''')]
+        tabelas.sort()
         
         for i in tabelas:
             vbox.addLayout(self.tabelaLayout(i))
@@ -85,12 +87,14 @@ class InputWindow(QtGui.QMainWindow):
         grid.addWidget(igual, 1, 2)
         grid.addWidget(like, 1, 3)
         
-        colunas = [i[3] for i in db.query('''
+        colunas = []
+        
+        colunas += [i[3] for i in db.query('''
             SELECT *
             FROM information_schema.columns
             WHERE table_schema = ''' + "'" + self.schema + ''''
             AND table_name   = ''' + "'" + tabela + "'")]
-        
+            
         self.tabelas[tabela] = []
         for i in colunas:
             aux = []
@@ -100,6 +104,16 @@ class InputWindow(QtGui.QMainWindow):
             aux.append(QtGui.QLineEdit())
             aux.append(QtGui.QCheckBox(''))
             self.tabelas[tabela].append(aux)
+        
+        #Opcao * para a tabela
+        aux = []
+        aux.append('*')
+        aux.append(QtGui.QLabel('TODOS OS CAMPOS'))
+        aux.append(QtGui.QCheckBox(''))
+        aux.append(QtGui.QLabel('')) #precisa de 4 elementos
+        aux.append(QtGui.QLabel('')) #precisa de 4 elementos
+        self.tabelas[tabela].append(aux)
+            
             
         for i in range(len(self.tabelas[tabela])):
             for j in range(1, len(self.tabelas[tabela][0])):
@@ -122,18 +136,28 @@ class InputWindow(QtGui.QMainWindow):
             camposDeBusca[tabela] = []
             camposDeFiltro[tabela] = []
             for coluna in matriz:
+                #caso seja campo de retorno
                 if coluna[2].isChecked():
+                    
+                    
                     camposDeRetorno[tabela].append(coluna[0])
+                    
+                    
                     if tabela not in tabelas:
                         tabelas.append(tabela)
+                        
+                #caso seja campo de busca
                 if str((coluna[3].text()).toUtf8()) != "":
                     valor = (coluna[3].text()).toUtf8()
+                    
                     try:
                         valor = float(valor)
                     except:
                         valor = str(valor)
+                        
                     if tabela not in tabelas:
                         tabelas.append(tabela)
+                        
                     if coluna[4].isChecked():
                         camposDeFiltro[tabela].append((coluna[0], valor))
                     else:
@@ -145,6 +169,7 @@ class InputWindow(QtGui.QMainWindow):
         sql = db.sqlSelectGeneratorSearchFilter(self.schema, tabelas, camposDeRetorno,
                 camposDeBusca, camposDeFiltro)
         
-        DataGridView(db.query(sql), db.camposRetornoCabecalho(camposDeRetorno), sql.upper())
+        DataGridView(db.query(sql), db.camposRetornoCabecalho(self.schema, camposDeRetorno),
+                    sql.upper())
         db.commit()
         

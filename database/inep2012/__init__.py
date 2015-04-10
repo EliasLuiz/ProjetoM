@@ -19,7 +19,7 @@ def carrega(diretorio):
         do governo que precisa de local oferta no lugar
     '''
     curso.txt2db(diretorio)
-    docente.txt2db(diretorio)
+    #docente.txt2db(diretorio)
     #aluno.txt2db(diretorio)
 
 def carregaCombobox():
@@ -47,54 +47,34 @@ def carregaCombobox():
     alunoPublica = [(0, "Não"),(1, "Sim"),(2, "não dispõe da informação")]
     
     
-    ### CURSO ###
-    global cursoCursosComp
-    cursoCursosComp = [("FORMAÇÃO DE PROFESSOR DE COMPUTAÇÃO (INFORMÁTICA)",
-                        "Formação de professor de computação (informática)"),
-                       ("GESTÃO DA INFORMAÇÃO",
-                        "Gestão da informação"),
-                       ("GESTÃO DA SEGURANÇA",
-                        "Gestão da segurança"),
-                       ("ADMINISTRAÇÃO DE REDES",
-                        "Administração de redes"),
-                       ("BANCO DE DADOS",
-                        "Banco de dados"),
-                       ("CIÊNCIA DA COMPUTAÇÃO",
-                        "Ciência da computação"),
-                       ("TECNOLOGIA DA INFORMAÇÃO",
-                        "Tecnologia da informação"),
-                       ("TECNOLOGIA EM DESENVOLVIMENTO DE SOFTWARES",
-                        "Tecnologia em desenvolvimento de softwares"),
-                       ("ANÁLISE DE SISTEMAS",
-                        "Análise de sistemas"),
-                       ("ANÁLISE E DESENVOLVIMENTO DE SISTEMAS (TECNÓLOGO)",
-                        "Análise e Desenvolvimento de Sistemas (Tecnólogo)"),
-                       ("SEGURANÇA DA INFORMAÇÃO",
-                        "Segurança da informação"),
-                       ("SISTEMAS DE INFORMAÇÃO",
-                        "Sistemas de informação"),
-                       ("USO DA INTERNET",
-                        "Uso da internet"),
-                       ("ENGENHARIA D_ COMPUTAÇÃO",
-                        "Engenharia de computação"),
-                       ("ENGENHARIA DE CONTROLE E AUTOMAÇÃO",
-                        "Engenharia de controle e automação"),
-                       ("ENGENHARIA DE REDES DE COMUNICAÇÃO",
-                        "Engenharia de redes de comunicação"),
-                       ("ENGENHARIA DE TELECOMUNICAÇÕES",
-                        "Engenharia de telecomunicações"),
-                       ("ENGENHARIA ELETRÔNICA",
-                        "Engenharia eletrônica"),
-                       ("ENGENHARIA MECATRÔNICA",
-                        "Engenharia mecatrônica"),
-                       ("TECNOLOGIA DIGITAL",
-                        "Tecnologia digital"),
-                       ("TECNOLOGIA ELETRÔNICA",
-                        "Tecnologia eletrônica"),
-                       ("TECNOLOGIA MECATRÔNICA",
-                        "Tecnologia mecatrônica"),
-                       ("TELECOMUNICAÇÕES",
-                        "Telecomunicações"),
-                       ("TECNOLOGIA EM GESTÃO DE TELECOMUNICAÇÕES",
-                        "Tecnologia em gestão de telecomunicações"),]        
+def getCursosComp():
+    ret = ["FORMAÇÃO DE PROFESSOR DE COMPUTAÇÃO (INFORMÁTICA)",
+                       "GESTÃO DA INFORMAÇÃO",
+                       "GESTÃO DA SEGURANÇA",
+                       "ADMINISTRAÇÃO DE REDES",
+                       "BANCO DE DADOS",
+                       "CIÊNCIA DA COMPUTAÇÃO",
+                       "TECNOLOGIA DA INFORMAÇÃO",
+                       "TECNOLOGIA EM DESENVOLVIMENTO DE SOFTWARES",
+                       "ANÁLISE DE SISTEMAS",
+                       "ANÁLISE E DESENVOLVIMENTO DE SISTEMAS (TECNÓLOGO)",
+                       "SEGURANÇA DA INFORMAÇÃO",
+                       "SISTEMAS DE INFORMAÇÃO",
+                       "USO DA INTERNET",
+                       "ENGENHARIA DA COMPUTAÇÃO",
+                       "ENGENHARIA DE CONTROLE E AUTOMAÇÃO",
+                       "ENGENHARIA DE REDES DE COMUNICAÇÃO",
+                       "ENGENHARIA DE TELECOMUNICAÇÕES",
+                       "ENGENHARIA ELETRÔNICA",
+                       "ENGENHARIA MECATRÔNICA",
+                       "TECNOLOGIA DIGITAL",
+                       "TECNOLOGIA ELETRÔNICA",
+                       "TECNOLOGIA MECATRÔNICA",
+                       "TELECOMUNICAÇÕES",
+                       "TECNOLOGIA EM GESTÃO DE TELECOMUNICAÇÕES"]
+    '''
+    for i, _ in enumerate(ret):
+        ret[i] = ret[i].decode('utf-8')
+       ''' 
+    return ret
     
