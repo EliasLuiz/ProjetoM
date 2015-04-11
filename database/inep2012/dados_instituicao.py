@@ -63,7 +63,7 @@ def txt2db(diretorio):
     firstExec = True
     
     
-    for linha in codecs.open(diretorio + "/DADOS/INSTITUICAO.txt", "r", 'latin-1'):
+    for linha in codecs.open(diretorio + "/INSTITUICAO.txt", "r", 'latin-1'):
         
         dic = {}
         dic2 = {}

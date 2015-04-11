@@ -13,10 +13,9 @@ def txt2db(diretorio):
     db.commit()
     db.query("DROP TABLE IF EXISTS INEP2012.ALUNO")
     db.query("""CREATE TABLE INEP2012.ALUNO(
-        CO_IES INT,
+        CO_ALUNO BIGINT,
         CO_CURSO INT,
         CO_ALUNO_CURSO INT,
-        CO_ALUNO BIGINT,
         CO_COR_RACA_ALUNO INT,
         DS_COR_RACA_ALUNO VARCHAR(24),
         IN_SEXO_ALUNO SMALLINT,
@@ -99,13 +98,13 @@ def txt2db(diretorio):
         
     firstExec = True
     
-    for linha in codecs.open(diretorio + "/DADOS/ALUNO.txt", "r", 'latin-1'):
+    for linha in codecs.open(diretorio + "/ALUNO.txt", "r", 'latin-1'):
         
         dic = {}
         
         #LEITURA DO ARQUIVO
         ############### DADOS DA IES ################
-        dic['CO_IES'] = linha[0:8]
+        #dic['CO_IES'] = linha[0:8]
         #dic['NO_IES'] = linha[8:208].strip()
         #dic['CO_CATEGORIA_ADMINISTRATIVA'] = linha[208:216]
         #dic['DS_CATEGORIA_ADMINISTRATIVA'] = linha[216:316].strip()

@@ -16,9 +16,8 @@ import codecs
 try:
     conn = pg.connect("dbname='projetom' user='projetom' host='localhost' password='maurilio'")
     cur = conn.cursor()
-except:
-    print "Não foi possivel conectar ao banco de dados"
-    raw_input('Pressione qualquer botão para encerrar o programa')
+except pg.Error, e:
+    insereErrorLog(e.pgerror)
     sys.exit(1)
 
 
@@ -82,8 +81,7 @@ def query(sql): #executa uma query sql
     try:
         cur.execute(sql)
     except pg.Error, e:
-        insereLog(e.pgerror)
-        print e.pgerror + "SQL:" +  sql
+        insereSqlLog(e.pgerror)
     try:
         return cur.fetchall()
     except:
@@ -104,10 +102,15 @@ def latin2utf(dictionary):
         except:
             None
 
-def insereLog(string):
+def insereErrorLog(string):
     from time import strftime
-    log = codecs.open('log.txt', 'a', 'latin-1')
-    log.write(strftime("[%d/%m/%Y %H:%M:%S] ") + string.decode("utf-8") + '\n')
+    log = codecs.open('errorlog.txt', 'a', 'latin-1')
+    log.write(strftime("[%d/%m/%Y %H:%M:%S] ") + string.decode("utf-8") + '\r\n')
+            
+def insereSqlLog(string):
+    from time import strftime
+    log = codecs.open('sqllog.txt', 'a', 'latin-1')
+    log.write(strftime("[%d/%m/%Y %H:%M:%S] ") + string.decode("utf-8") + '\r\n')
     
             
             
@@ -133,9 +136,48 @@ def camposRetornoCabecalho(schema, camposDeRetorno):
                         WHERE table_schema = ''' + "'" + schema + ''''
                         AND table_name   = ''' + "'" + tabela + "'")]
                     ]
+            continue
         for coluna in i:
             res.append(" %s.%s" % (tabela, coluna))
     return res
+	
+def buscaSchemas():
+    #busca do banco os schemas
+    schemas = [i[0] for i in query('''select schema_name from
+        information_schema.schemata''')]
+    schemas.sort()
+    
+    #remove schemas nao apropriados que podem ter sido criados
+    #durante a instalacao do banco
+    
+    if 'projetom' in schemas:
+        schemas.remove('projetom')
+    if 'information_schema' in schemas:
+        schemas.remove('information_schema')
+    if 'pg_catalog' in schemas:
+        schemas.remove('pg_catalog')
+    if 'public' in schemas:
+        schemas.remove('public')
+     
+    return schemas
+        
+def buscaTabelas(schema):
+    tabelas = {}
+        
+    tabelas = [i[2] for i in query('''
+        SELECT * FROM information_schema.tables 
+        WHERE table_schema = ''' + "'" + schema + "'" + '''
+        ''')]
+    tabelas.sort()
+        
+    return tabelas
+    
+def buscaColunas(schema, tabela):
+    return [i[3] for i in query('''
+            SELECT *
+            FROM information_schema.columns
+            WHERE table_schema = ''' + "'" + schema + ''''
+            AND table_name   = ''' + "'" + tabela + "'")]
     
 
 
@@ -211,31 +253,30 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
         busca = True
     
         
-    sql += " ("
+    #sql += " ("
     filtro = False
     for i, j in camposDeFiltro.iteritems():
         for k, l in j:
             sql += " %s.%s" % (i, k)
-            sql += " like %s or"
+            #sql += " like %s or"
+            sql += " like %s and"
             values += ['%' + l + '%']
             filtro = True
-            
-    if filtro:
-        sql = sql[:-3] + ')' #retira o ultimo or
+    
+    if filtro or busca:
+        sql = sql[:-4] #retira o ultimo and
     else:
-        sql = sql[:-6]
-        if not busca:
-            sql = sql[:-2] #retira o  where se nao precisar
+        sql = sql[:-6] #retira o  where se nao precisar
         
     if ordenacao != None:
         sql += " ORDER BY %s" % ordenacao
         
     sql = cur.mogrify(sql + ';', tuple(values))
     
-    insereLog(sql)
+    insereSqlLog(sql)
     
-    return sql 
-
+    return sql
+ 
 
 
 #Geradores de sql para inserts

@@ -27,7 +27,7 @@ def txt2db(diretorio):
     firstExec = True
 
 
-    for linha in codecs.open(diretorio + "/DADOS/LOCAL_OFERTA.txt", "r", 'latin-1'):
+    for linha in codecs.open(diretorio + "/LOCAL_OFERTA.txt", "r", 'latin-1'):
 
         dic = {}
 

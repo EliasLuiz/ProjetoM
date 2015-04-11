@@ -44,13 +44,8 @@ class InputWindow(QtGui.QMainWindow):
         vbox = QtGui.QVBoxLayout()
         
                 
+        tabelas = db.buscaTabelas(self.schema)
         self.tabelas = {}
-        
-        tabelas = [i[2] for i in db.query('''
-        SELECT * FROM information_schema.tables 
-        WHERE table_schema = ''' + "'" + self.schema + "'" + '''
-        ''')]
-        tabelas.sort()
         
         for i in tabelas:
             vbox.addLayout(self.tabelaLayout(i))
@@ -87,13 +82,7 @@ class InputWindow(QtGui.QMainWindow):
         grid.addWidget(igual, 1, 2)
         grid.addWidget(like, 1, 3)
         
-        colunas = []
-        
-        colunas += [i[3] for i in db.query('''
-            SELECT *
-            FROM information_schema.columns
-            WHERE table_schema = ''' + "'" + self.schema + ''''
-            AND table_name   = ''' + "'" + tabela + "'")]
+        colunas = db.buscaColunas(self.schema, tabela)
             
         self.tabelas[tabela] = []
         for i in colunas:
@@ -170,6 +159,6 @@ class InputWindow(QtGui.QMainWindow):
                 camposDeBusca, camposDeFiltro)
         
         DataGridView(db.query(sql), db.camposRetornoCabecalho(self.schema, camposDeRetorno),
-                    sql.upper())
+                    (sql.decode("utf-8")).upper())
         db.commit()
         

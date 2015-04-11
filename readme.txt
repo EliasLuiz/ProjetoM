@@ -264,10 +264,9 @@
                 IN_VISITANTE BOOLEAN,
                 IN_VISITANTE_IFES_VINCULO INT
             ALUNO
-                CO_IES INT,
+                CO_ALUNO BIGINT,
                 CO_CURSO INT,
                 CO_ALUNO_CURSO INT,
-                CO_ALUNO BIGINT,
                 CO_COR_RACA_ALUNO INT,
                 DS_COR_RACA_ALUNO VARCHAR(24),
                 IN_SEXO_ALUNO SMALLINT,

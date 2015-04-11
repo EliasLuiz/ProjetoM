@@ -58,10 +58,8 @@ class MainWindow(QtGui.QMainWindow):
         
         #busca do banco os schemas
         #  sera gerada uma inputWindow para cada janela
-        self.schemas = [i[0] for i in db.query('''select schema_name from
-                information_schema.schemata''')]
-        self.schemas.sort()
-        self.schemas.remove('projetom')
+        self.schemas = db.buscaSchemas()
+		
         
         self.botoes = []
         for i in self.schemas:
@@ -89,9 +87,11 @@ de dados ''' + self.schemas[i].upper())
         
         sender = self.sender()
         
-        if sender.text() == "INEP2012":
-            from database import inep2012
-            inep2012.carrega(fileDialog.pickDirectory())
+        diretorio = fileDialog.pickDirectory()
+        if diretorio != "":
+            if sender.text() == "INEP2012":
+                from database import inep2012
+                inep2012.carrega(diretorio)
             
         QtCore.QCoreApplication.instance().quit()
         
@@ -107,9 +107,7 @@ de dados ''' + self.schemas[i].upper())
             campos = db.camposRetornoSql(sql) 
             if campos[0] == '*':
                 campos = None
-            db.insereLog(sql)
+            db.insereSqlLog(sql)
             dataGridView.DataGridView(db.query(sql), campos, sql.upper())
             db.commit()
-        #aux = Inep2012Window()
-        #aux.show()
         
