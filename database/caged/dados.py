@@ -15,7 +15,6 @@ def txt2db(arquivo):
     ANO INT,
     MES INT,
     CO_MUNICIPIO INT,
-    CO_UF INT,
     ANO_COMP INT,
     CO_CBO2002 INT,
     CO_CLASSE10 INT,
@@ -61,7 +60,7 @@ def txt2db(arquivo):
         dados = linha.split(';')
     
         dic['co_adm_desl'] = int(dados[0])
-        dic['no_adm_desl'] = 'Admissao' if dados[0] == '1' else 'Desligamento'
+        dic['no_adm_desl'] = 'Admissao' if int(dados[0]) == 1 else 'Desligamento'
     
         dic['ano'] = int(dados[1][0:4])
         dic['mes'] = int(dados[1][4:6])
@@ -113,7 +112,7 @@ def txt2db(arquivo):
     
         dic['horas_contp'] = int(dados[10])
         
-        dic['co_ibge_subsetor'] = int(dados[11]) if dados[11] == '-1' else None
+        dic['co_ibge_subsetor'] = int(dados[11]) if dados[11] != '-1' else None
         dic['no_ibge_subsetor'] = {
             1: 'Extrativa mineral',
             2: 'Industria de produtos minerais nao metalicos',
@@ -149,7 +148,7 @@ def txt2db(arquivo):
     
         dic['port_defic'] = int(dados[14]) == 1
     
-        dic['co_raca_cor'] = int(dados[15]) if dados[15] == '-1' else None
+        dic['co_raca_cor'] = int(dados[15]) if dados[15] != '-1' else None
         dic['no_raca_cor'] = {
             1: 'Indigena',
             2: 'Branca',

@@ -3,6 +3,7 @@ from database import db
 from database import inep2012
 from database import caged
 from gui import inputWindow, fileDialog, dataGridView
+from time import strftime
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -91,22 +92,22 @@ de dados ''' + self.schemas[i].upper())
         
     def loadCallInep2012(self):
         
-        sender = self.sender()
-        
         diretorio = fileDialog.pickDirectory()
         if diretorio != "":
+            print strftime('%H:%M:%S')
             inep2012.carrega(diretorio)
+            print strftime('%H:%M:%S')
             
         QtCore.QCoreApplication.instance().quit()
         
         
     def loadCallCaged(self):
         
-        sender = self.sender()
-        
         arquivo = fileDialog.pickFile("*.txt")
         if arquivo != "":
+            print strftime('%H:%M:%S')
             caged.carrega(arquivo)
+            print strftime('%H:%M:%S')
             
         QtCore.QCoreApplication.instance().quit()
         
