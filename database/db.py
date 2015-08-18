@@ -17,15 +17,15 @@ try:
     conn = pg.connect("dbname='projetom' user='projetom' host='localhost' password='maurilio'")
     cur = conn.cursor()
 except pg.Error, e:
-    insereErrorLog(e.pgerror)
+    #insereErrorLog(e.pgerror)
     sys.exit(1)
 
 
-#grafos √© um dicion√°rio que contem um "grafo" para cada schema do banco
-#esse grafo √© a lista de adjac√™ncia, representada por um dicion√°rio
-#cada entrada desse dicion√°rio representa uma tabela e guarda uma lista com
+#grafos e um dicionario que contem um "grafo" para cada schema do banco
+#esse grafo e a lista de adjacencia, representada por um dicionario
+#cada entrada desse dicionario representa uma tabela e guarda uma lista com
 #as tabelas com as quais ela pode se ligar diretamente
-#o objetivo √© ser capaz de descobrir quais tabelas s√£o necess√°rias para
+#o objetivo e ser capaz de descobrir quais tabelas sao necessarias para
 #  conseguir gerar um determinado sql
 grafos = {}
 
@@ -75,7 +75,7 @@ def iniciaSchema(schema):
                 None, None, None)
     
 
-#fun√ß√µes gerais relativas ao banco    
+#funcoes gerais relativas ao banco    
     
 def query(sql): #executa uma query sql
     try:
@@ -94,8 +94,8 @@ def latin2utf(dictionary):
         except:
             None
         try:
-            minusculo = ('√°', '√£', '√†', '√¢', '√©', '·∫Ω', '√™', '√≠', '√≥', '√¥', '√µ', '√∫', '√º', '√ß')
-            maiusculo = ('√Å', '√É', '√Ä', '√Ç', '√â', '·∫º', '√ä', '√ç', '√ì', '√î', '√ï', '√ö', '√ú', '√á')
+            minusculo = ('·', '‡', '‚', '„', 'È', 'Í', 'Ì', 'Û', 'Ù', 'ı', '˙', '¸', 'Á')
+            maiusculo = ('¡', '¿', '¬', '√', '…', ' ', 'Õ', '”', '‘', '’', '⁄', '‹', '«')
             dictionary[i] = (j.encode('utf-8')).upper()
             for k in range(len(minusculo)):
                 dictionary[i] = dictionary[i].replace(minusculo[k], maiusculo[k])
@@ -140,7 +140,7 @@ def camposRetornoCabecalho(schema, camposDeRetorno):
         for coluna in i:
             res.append(" %s.%s" % (tabela, coluna))
     return res
-	
+
 def buscaSchemas():
     #busca do banco os schemas
     schemas = [i[0] for i in query('''select schema_name from
@@ -161,9 +161,7 @@ def buscaSchemas():
      
     return schemas
         
-def buscaTabelas(schema):
-    tabelas = {}
-        
+def buscaTabelas(schema):        
     tabelas = [i[2] for i in query('''
         SELECT * FROM information_schema.tables 
         WHERE table_schema = ''' + "'" + schema + "'" + '''
@@ -182,19 +180,19 @@ def buscaColunas(schema, tabela):
 
 
 def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposDeBusca=None, 
-        camposDeFiltro=None, ordenacao=None):
+        camposDeFiltro=None, insereErrorLogordenacao=None):
     '''
     tabelas = lista com nome das tabelas na qual a pesquisa sera feita
     camposDeRetorno = dicionario com lista contendo o nome dos campos a serem retornados por tabela 
-        caso n√£o seja especificado, retornara todos os campos (cuidado ao usar multiplas tabelas ?)
+        caso nao seja especificado, retornara todos os campos (cuidado ao usar multiplas tabelas ?)
     camposDeBusca = dicionario por tabela, cada uma sendo lista de tuplas contendo os nomes dos campos
             e os valores aos quais devem ser iguais
-        caso n√£o seja especificado nao havera filtragem
+        caso nao seja especificado nao havera filtragem
     camposDeFiltro = dicionario por tabela, cada uma sendo lista de tuplas contendo os nomes dos campos
             e os valores aos quais devem ser parecidos
-        caso n√£o seja especificado nao havera filtragem
+        caso nao seja especificado nao havera filtragem
     ordenacao = campo utilizado para ordenar os resultados
-        caso n√£o seja especificado nao ordenara os resultados
+        caso nao seja especificado nao ordenara os resultados
     ''' 
     
     if schema not in grafos:
@@ -268,9 +266,6 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
     else:
         sql = sql[:-6] #retira o  where se nao precisar
         
-    if ordenacao != None:
-        sql += " ORDER BY %s" % ordenacao
-        
     sql = cur.mogrify(sql + ';', tuple(values))
     
     insereSqlLog(sql)
@@ -282,7 +277,7 @@ def sqlSelectGeneratorSearchFilter(schema, tabelas, camposDeRetorno="*", camposD
 #Geradores de sql para inserts
 
 def prepareInsert(statementName, tableName, dictionary): #prepara sql de insert baseado no dicionario
-    #gerador de sql baseado no dicionario
+    #gerador de sql baseado no dicionaricamposDeBuscao
     sql = 'PREPARE %s_INS AS INSERT INTO %s( ' % (statementName, tableName)
     sql2 = ') VALUES ( '
     cont=1
@@ -323,7 +318,7 @@ def sqlInsertGenerator(tableName, dictionary): #gera sql de insert baseado no di
     
 
 
-#Manipula√ß√£o de configura√ß√µes do postgresql
+#Manipulacao de configuracoes do postgresql
      
 def pgAutoCommit(state = None): #altera o valor de auto-commit do postgres
     if state != None: #se passar parametro tenta alterar a politica
@@ -335,7 +330,7 @@ def pgAutoCommit(state = None): #altera o valor de auto-commit do postgres
             print "Erro ao alterar a politica de commits do banco de dados"
             raw_input('Pressione enter para encerrar o programa')
             sys.exit(1)
-    else: # se nao passar parametro retorna o valor atual
+    else: # se nao passar parinsereErrorLogametro retorna o valor atual
         return state
     
 def commit(): #executa commit na transacao

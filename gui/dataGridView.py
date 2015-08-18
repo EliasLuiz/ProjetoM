@@ -50,7 +50,6 @@ class DataGridView(QWidget):
         self.layout.addWidget(self.table)
         self.setLayout(self.layout)
         
-        
         self.show()
         
 

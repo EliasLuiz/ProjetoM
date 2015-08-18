@@ -1,5 +1,7 @@
 from PyQt4 import QtGui, QtCore
 from database import db
+from database import inep2012
+from database import caged
 from gui import inputWindow, fileDialog, dataGridView
 
 
@@ -22,12 +24,16 @@ class MainWindow(QtGui.QMainWindow):
         
         #submenu de carregar base de dados
         loadAction = QtGui.QMenu('Carregar', self)
-        
         #acao de carregar base de dados inep2012
         inep2012 = QtGui.QAction('INEP2012', self)
         inep2012.setStatusTip('Carregar base de dados INEP 2012')
-        inep2012.triggered.connect(self.loadCall)
+        inep2012.triggered.connect(self.loadCallInep2012)
         loadAction.addAction(inep2012)
+        #acao de carregar base de dados inep2012
+        caged = QtGui.QAction('CAGED', self)
+        caged.setStatusTip('Carregar base de dados CAGED')
+        caged.triggered.connect(self.loadCallCaged)
+        loadAction.addAction(caged)
         
         #acao de inserir sql diretamente
         sqlAction = QtGui.QAction('Inserir &SQL', self)        
@@ -59,7 +65,7 @@ class MainWindow(QtGui.QMainWindow):
         #busca do banco os schemas
         #  sera gerada uma inputWindow para cada janela
         self.schemas = db.buscaSchemas()
-		
+        
         
         self.botoes = []
         for i in self.schemas:
@@ -83,15 +89,24 @@ de dados ''' + self.schemas[i].upper())
         win.show()
         
         
-    def loadCall(self):
+    def loadCallInep2012(self):
         
         sender = self.sender()
         
         diretorio = fileDialog.pickDirectory()
         if diretorio != "":
-            if sender.text() == "INEP2012":
-                from database import inep2012
-                inep2012.carrega(diretorio)
+            inep2012.carrega(diretorio)
+            
+        QtCore.QCoreApplication.instance().quit()
+        
+        
+    def loadCallCaged(self):
+        
+        sender = self.sender()
+        
+        arquivo = fileDialog.pickFile("*.txt")
+        if arquivo != "":
+            caged.carrega(arquivo)
             
         QtCore.QCoreApplication.instance().quit()
         

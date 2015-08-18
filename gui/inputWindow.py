@@ -1,8 +1,7 @@
 #-*- coding: latin -*-
-from PyQt4 import QtGui, QtCore
-from database import db, inep2012
+from PyQt4 import QtGui
+from database import db
 from gui.dataGridView import DataGridView
-import codecs
 
 
 class InputWindow(QtGui.QMainWindow):

@@ -11,5 +11,5 @@ def pickDirectory():
     
 def pickFile(extensions=""):
     #retorna o arquivo selecionado pelo usuario
-    #extensions = extensoes aceitaveis. Ex: Images (*.png *.xpm *.jpg);;Text files (*.txt)
+    #extensions = extensoes aceitaveis. Ex: Images (*.png *.xpm *.jpg); Text files (*.txt)
     return QtGui.QFileDialog.getOpenFileName(caption="Escolha o arquivo", filter=extensions);
