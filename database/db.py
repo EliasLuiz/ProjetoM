@@ -94,8 +94,8 @@ def latin2utf(dictionary):
         except:
             None
         try:
-            minusculo = ('á', 'à', 'â', 'ã', 'é', 'ê', 'í', 'ó', 'ô', 'õ', 'ú', 'ü', 'ç')
-            maiusculo = ('Á', 'À', 'Â', 'Ã', 'É', 'Ê', 'Í', 'Ó', 'Ô', 'Õ', 'Ú', 'Ü', 'Ç')
+            minusculo = (u'á', u'à', u'â', u'ã', u'é', u'ê', u'í', u'ó', u'ô', u'õ', u'ú', u'ü', u'ç')
+            maiusculo = (u'Á', u'À', u'Â', u'Ã', u'É', u'Ê', u'Í', u'Ó', u'Ô', u'Õ', u'Ú', u'Ü', u'Ç')
             dictionary[i] = (j.encode('utf-8')).upper()
             for k in range(len(minusculo)):
                 dictionary[i] = dictionary[i].replace(minusculo[k], maiusculo[k])
