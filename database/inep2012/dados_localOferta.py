@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # -*- coding: latin -*-
 '''
 realiza a leitura do arquivo /DADOS/LOCAL_OFERTA.txt

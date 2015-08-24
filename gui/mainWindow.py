@@ -91,9 +91,9 @@ de dados ''' + self.schemas[i].upper())
         
         
     def loadCallInep2012(self):
-	
+        
         diretorio = fileDialog.pickDirectory()
-		
+        
         if diretorio != "":
             print strftime('%H:%M:%S')
             inep2012.carrega(diretorio)
@@ -105,7 +105,7 @@ de dados ''' + self.schemas[i].upper())
     def loadCallCaged(self):
         
         arquivo = fileDialog.pickFile("*.txt")
-		
+            
         if arquivo != "":
             print strftime('%H:%M:%S')
             caged.carrega(arquivo)

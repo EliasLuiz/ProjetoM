@@ -9,6 +9,8 @@ from database.caged import municipio
 from database.caged import subclasse
 from database.caged import dados
 
+db.query("SET constraint_exclusion = partition;")
+
 def carrega(arquivo):
     
     db.query("CREATE SCHEMA IF NOT EXISTS CAGED")

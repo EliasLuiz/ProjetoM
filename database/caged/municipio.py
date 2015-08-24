@@ -13,13 +13,13 @@ def txt2db(diretorio):
     db.query("DROP TABLE IF EXISTS CAGED.MUNICIPIO")
     db.query("""CREATE TABLE CAGED.MUNICIPIO(
     CO_MUNICIPIO INT,
-    UF VARCHAR(2),
+    UF CHAR(2),
     MUNICIPIO VARCHAR(40)
     )""")
     
     firstExec = True
     
-    for linha in codecs.open(diretorio + "/MUNICIPIO.txt", "r", "latin-1"):
+    for linha in codecs.open(diretorio + "/municipio.txt", "r", "latin-1"):
         
         dic = {}
         
@@ -27,7 +27,7 @@ def txt2db(diretorio):
         #LEITURA DO ARQUIVO
         dic["co_municipio"] = int(dados[0])
         dic["uf"] = dados[1]
-        dic["municipio"] = dados[2]
+        dic["municipio"] = dados[2].strip("\n")
         
         db.latin2utf(dic)
         

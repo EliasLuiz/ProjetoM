@@ -47,6 +47,7 @@ def txt2db(arquivo):
 
     firstExec = True
     primeiraLinha = True
+    ano = 0
     
     for linha in codecs.open(arquivo, "r", "latin-1"):
         
@@ -63,6 +64,7 @@ def txt2db(arquivo):
         dic['no_adm_desl'] = 'Admissao' if int(dados[0]) == 1 else 'Desligamento'
     
         dic['ano'] = int(dados[1][0:4])
+        ano = dic['ano']
         dic['mes'] = int(dados[1][4:6])
         
         if len(dados[2]) == 6:
@@ -240,13 +242,35 @@ def txt2db(arquivo):
             52: 'Goias',
             53: 'Distrito Federal'
         }[int(dados[23])]
-            '''
+        '''
         db.latin2utf(dic)
         
-        if firstExec:
-            db.prepareInsert("DADOS", "CAGED.DADOS", dic)
+        if firstExec:    
+            #checa se particao ja existe
+            filhos = [i[1] for i in db.query("""
+                    SELECT cn.nspname AS schema_child, c.relname AS child, pn.nspname AS schema_parent, p.relname AS parent
+                    FROM pg_inherits 
+                    JOIN pg_class AS c ON (inhrelid=c.oid)
+                    JOIN pg_class as p ON (inhparent=p.oid)
+                    JOIN pg_namespace pn ON pn.oid = p.relnamespace
+                    JOIN pg_namespace cn ON cn.oid = c.relnamespace
+                    WHERE p.relname = 'dados' and pn.nspname = 'caged';""")]
+            #se nao existe cria particao
+            if ("dados%s" % ano) not in filhos:
+                db.query("CREATE TABLE IF NOT EXISTS CAGED.DADOS%s () INHERITS (CAGED.DADOS);" % ano)
+                db.query("CREATE INDEX indcbo%s ON CAGED.DADOS%s (co_cbo2002);" % (ano, ano))
+                db.query("CREATE INDEX indclasse%s ON CAGED.DADOS%s (co_classe20);" % (ano, ano))
+            #se ja existe retira constraint (insercao mais rapida)
+            else:
+                db.query("ALTER TABLE CAGED.DADOS%s DROP CONSTRAINT indano;" % ano)
+            
+            db.prepareInsert("DADOS%s" % ano, "CAGED.DADOS%s" % ano, dic)
             db.commit()
             firstExec = False
             
-        db.usePreparedInsert("DADOS", dic)
+        db.usePreparedInsert("DADOS%s" % dic['ano'], dic)
+    
+    db.query("ALTER TABLE CAGED.DADOS%s ADD CONSTRAINT indano CHECK (ano = %s);" % (ano, ano))
+    db.query("REINDEX TABLE indcbo%s;" % ano)
+    db.query("REINDEX TABLE indclasse%s;" % ano)
     db.commit()

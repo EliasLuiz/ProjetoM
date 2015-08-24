@@ -32,9 +32,9 @@ grafos = {}
 def iniciaSchema(schema):
     '''
     Gera o grafo utilizado para ligar as tabelas
-    schema é o schema do BD que será utilizado
+    schema eh o schema do BD que sera utilizado
     
-    Assume que as chaves estrangeiras do banco seguem o padrão
+    Assume que as chaves estrangeiras do banco seguem o padrao
         int co_tabela, relacionando com a chave primaria da tabela
     '''
 
@@ -164,8 +164,16 @@ def buscaSchemas():
 def buscaTabelas(schema):        
     tabelas = [i[2] for i in query('''
         SELECT * FROM information_schema.tables 
-        WHERE table_schema = ''' + "'" + schema + "'" + '''
-        ''')]
+        WHERE table_schema = '%s' ''' % schema)]
+    filhos = [i[1] for i in query("""
+        SELECT cn.nspname AS schema_child, c.relname AS child, pn.nspname AS schema_parent, p.relname AS parent
+        FROM pg_inherits 
+        JOIN pg_class AS c ON (inhrelid=c.oid)
+        JOIN pg_class as p ON (inhparent=p.oid)
+        JOIN pg_namespace pn ON pn.oid = p.relnamespace
+        JOIN pg_namespace cn ON cn.oid = c.relnamespace
+        WHERE pn.nspname = '%s';""" % schema)]
+    tabelas = [i for i in tabelas if i not in filhos]
     tabelas.sort()
         
     return tabelas
