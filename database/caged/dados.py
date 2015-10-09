@@ -81,8 +81,6 @@ def txt2db(arquivo):
                 dic['co_municipio'] = int(dados[2])
             else:
                 dic['co_municipio'] = None
-                
-                #####################################################
         
             dic['ano_comp'] = int(dados[3]) if dados[3] != '-1' else None
         
