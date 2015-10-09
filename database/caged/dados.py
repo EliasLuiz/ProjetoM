@@ -141,8 +141,6 @@ def txt2db(arquivo):
         
             dic['horas_contp'] = int(dados[10])
             
-            # ATE AQUI OK CAGED 2009
-            
             try:
                 int(dados[11])
             except:
@@ -305,8 +303,6 @@ def txt2db(arquivo):
             '''
             db.latin2utf(dic)
             
-            print 'first exec'
-            
             if firstExec:    
                 #checa se particao ja existe
                 filhos = [i[1] for i in db.query("""
@@ -319,13 +315,11 @@ def txt2db(arquivo):
                         WHERE p.relname = 'dados' and pn.nspname = 'caged';""")]
                 #se nao existe cria particao
                 if ("dados%s" % ano) not in filhos:
-                    print 'TABELA %s NAO EXISTE' % ano
                     db.query("CREATE TABLE IF NOT EXISTS CAGED.DADOS%s () INHERITS (CAGED.DADOS);" % ano)
                     db.query("CREATE INDEX indcbo%s ON CAGED.DADOS%s (co_cbo2002);" % (ano, ano))
                     db.query("CREATE INDEX indclasse%s ON CAGED.DADOS%s (co_classe20);" % (ano, ano))
                 #se ja existe retira constraint (insercao mais rapida)
                 else:
-                    print 'TABELA %s EXISTE' % ano
                     db.query("ALTER TABLE CAGED.DADOS%s DROP CONSTRAINT indano;" % ano)
                 
                 db.prepareInsert("DADOS%s" % ano, "CAGED.DADOS%s" % ano, dic)
