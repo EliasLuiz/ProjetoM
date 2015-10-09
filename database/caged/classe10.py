@@ -25,7 +25,7 @@ def txt2db(diretorio):
         #leitura do arquivo
         dados = linha.split('\t')
         dic["co_classe10"] = int(dados[0])
-        dic["classe"] = dados[1]
+        dic["classe"] = dados[1].strip("\n")
         
         db.latin2utf(dic)
         

@@ -81,7 +81,7 @@ def query(sql): #executa uma query sql
     try:
         cur.execute(sql)
     except pg.Error, e:
-        insereSqlLog(e.pgerror)
+        insereSqlLog(e.pgerror + " -- SQL: " + sql)
     try:
         return cur.fetchall()
     except:
@@ -94,11 +94,7 @@ def latin2utf(dictionary):
         except:
             None
         try:
-            minusculo = (u'á', u'à', u'â', u'ã', u'é', u'ê', u'í', u'ó', u'ô', u'õ', u'ú', u'ü', u'ç')
-            maiusculo = (u'Á', u'À', u'Â', u'Ã', u'É', u'Ê', u'Í', u'Ó', u'Ô', u'Õ', u'Ú', u'Ü', u'Ç')
-            dictionary[i] = (j.encode('utf-8')).upper()
-            for k in range(len(minusculo)):
-                dictionary[i] = dictionary[i].replace(minusculo[k], maiusculo[k])
+            dictionary[i] = j.upper().encode('utf-8')
         except:
             None
 
